@@ -1,0 +1,8 @@
+node_modules
+
+# For development locally
+bin/
+#resources
+.env.local
+.idea
+.secrets

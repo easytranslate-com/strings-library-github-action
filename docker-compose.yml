@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  action:
+    env_file: .env.local
+    container_name: translation_github_action
+    working_dir: /app
+    build:
+      context: .docker
+    volumes:
+      - .:/app

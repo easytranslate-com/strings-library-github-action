@@ -1,0 +1,46 @@
+on:
+  pull_request:
+    types: [ labeled ]
+
+jobs:
+  pull_strings_from_easytranslate:
+    if: ${{ github.event.label.name == 'download-easytranslate-strings' }}
+    runs-on: ubuntu-latest
+    name: Download strings from EasyTranslate
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Checkout PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: gh pr checkout ${{ github.event.pull_request.number }}
+
+      - name: Execute our action
+        uses: ./
+        id: pull_easytranslate
+        with:
+          easytranslate_action: 'download'
+          source_language: 'en'
+          source_root_folder: 'resources'
+          translation_file_paths: 'files/**/**json'
+          target_languages: 'da,de'
+          access_token: ${{ secrets.EASYTRANSLATE_API_ACCESS_TOKEN }}
+          base_api_url: 'https://api.platform.sandbox.easytranslate.com'
+          team_name: 'x-force-deadpool'
+          string_library_id: 'easytranslate-string-library-id'
+          download_strings_format: 'flat'
+
+      - name: Update the pull request
+        if: ${{ steps.pull_easytranslate.outputs.outcome == 'continue' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: |
+          git config user.name 'Your Name'
+          git config user.email 'Your GitHub email'
+          git add .
+          git commit -am 'Updating strings'
+          git push

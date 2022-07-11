@@ -1,0 +1,43 @@
+{
+  "name": "easytranslate-translation-github-action",
+  "version": "0.1.0",
+  "description": "Translate your projects using GitHub",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "format": "prettier --write **/*.ts",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KenoKokoro/translation-github-action.git"
+  },
+  "keywords": [
+    "actions",
+    "container",
+    "toolkit",
+    "setup"
+  ],
+  "author": "EasyTranslate",
+  "license": "MIT",
+  "homepage": "https://easytranslate.com",
+  "devDependencies": {
+    "@types/jest": "^28.1.3",
+    "@types/node": "^18.0.0",
+    "jest": "^28.1.1",
+    "jest-circus": "^28.1.1",
+    "prettier": "^2.7.1",
+    "ts-jest": "^28.0.5",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@actions/core": "^1.9.0",
+    "@actions/github": "^5.0.3",
+    "@actions/glob": "^0.3.0",
+    "axios": "^0.27.2",
+    "lodash.isequal": "^4.5.0",
+    "mkdirp": "^1.0.4",
+    "unzipper": "^0.10.11"
+  }
+}

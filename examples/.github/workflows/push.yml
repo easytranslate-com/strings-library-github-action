@@ -1,0 +1,31 @@
+name: 'Push your strings to EasyTranslate'
+
+on:
+  pull_request:
+    types: [ labeled ]
+
+jobs:
+  download_strings:
+    if: ${{ github.event.label.name == 'push-easytranslate-strings' }}
+    runs-on: ubuntu-latest
+    name: Send strings to EasyTranslate
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Execute our action
+        uses: ./
+        id: push_easytranslate
+        with:
+          easytranslate_action: 'push'
+          source_language: 'en'
+          source_root_folder: 'resources'
+          translation_file_paths: 'files/**/**json'
+          target_languages: 'da,de'
+          access_token: ${{ secrets.EASYTRANSLATE_API_ACCESS_TOKEN }}
+          base_api_url: 'https://api.platform.sandbox.easytranslate.com'
+          team_name: 'x-force-deadpool'
+          string_library_id: 'easytranslate-string-library-id'

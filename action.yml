@@ -1,0 +1,52 @@
+name: 'EasyTranslate Translation Action'
+description: "Localize your source code"
+author: 'EasyTranslate'
+branding:
+  icon: 'command'
+  color: 'blue'
+
+inputs:
+  easytranslate_action:
+    description: '`pull` or `push` your strings to EasyTranslate'
+    required: true
+    default: 'push'
+
+  source_language:
+    description: 'Your source language code'
+    required: true
+
+  target_languages:
+    description: 'Your target language codes'
+    required: true
+
+  source_root_folder:
+    description: 'Root folder where your source strings are located. This should not be included in your `translation_file_paths`'
+    required: true
+
+  translation_file_paths:
+    description: 'Location to your source files'
+    required: true
+
+  access_token:
+    description: 'Your EasyTranslate access token'
+    required: true
+
+  base_api_url:
+    description: 'EasyTranslate API URL'
+    required: true
+
+  team_name:
+    description: 'EasyTranslate Team identifier'
+    required: true
+
+  string_library_id:
+    description: 'EasyTranslate String library ID that will store your translations'
+    required: true
+
+  download_strings_format:
+    description: 'Defines the format of the JSON object inside the downloaded strings. Works only with `easytranslate_action: download`'
+    required: false
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
