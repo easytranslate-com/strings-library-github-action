@@ -38,7 +38,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Execute our action
-        uses: ./
+        uses: "easytranslate-com/strings-library-github-action@v1"
         id: push_easytranslate
         with:
           easytranslate_action: 'push'
@@ -85,7 +85,7 @@ jobs:
         run: gh pr checkout ${{ github.event.pull_request.number }}
 
       - name: Execute our action
-        uses: ./
+        uses: "easytranslate-com/strings-library-github-action@v1"
         id: pull_easytranslate
         with:
           easytranslate_action: 'pull'
@@ -142,7 +142,7 @@ jobs:
         run: gh pr checkout ${{ github.event.pull_request.number }}
 
       - name: Execute our action
-        uses: ./
+        uses: "easytranslate-com/strings-library-github-action@v1.0.1"
         id: pull_easytranslate
         with:
           easytranslate_action: 'download'
