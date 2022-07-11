@@ -2,6 +2,7 @@ node_modules
 
 # For development locally
 bin/
+resources/
 #resources
 .env.local
 .idea
