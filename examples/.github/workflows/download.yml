@@ -20,7 +20,7 @@ jobs:
         run: gh pr checkout ${{ github.event.pull_request.number }}
 
       - name: Execute our action
-        uses: ./
+        uses: "easytranslate-com/strings-library-github-action@v1.0.1"
         id: pull_easytranslate
         with:
           easytranslate_action: 'download'
