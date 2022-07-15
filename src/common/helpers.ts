@@ -27,7 +27,7 @@ export function extract_zip_file(root_folder: string, content: Buffer): Promise<
 
 export function find_language_code_from_file_path(path: string, all_languages: string[]): string {
   for (const language of all_languages) {
-    if (path.includes(`/${language}/`)) {
+    if (path.includes(`/${language}/`) || path.includes(`/${language}.`)) {
       return language;
     }
   }
