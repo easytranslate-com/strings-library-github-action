@@ -34,7 +34,7 @@ function extract_zip_file(root_folder, content) {
 exports.extract_zip_file = extract_zip_file;
 function find_language_code_from_file_path(path, all_languages) {
     for (const language of all_languages) {
-        if (path.includes(`/${language}/`)) {
+        if (path.includes(`/${language}/`) || path.includes(`/${language}.`)) {
             return language;
         }
     }
