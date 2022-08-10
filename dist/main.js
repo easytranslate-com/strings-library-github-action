@@ -66,6 +66,9 @@ function pull(strings_api, request_dto) {
             }
             const translation_key = generator.value;
             for (const translation of translation_key.attributes.translations) {
+                if (!translation.text) {
+                    continue;
+                }
                 let [file_name, key_name] = translation.key.split('::');
                 file_name = file_name.replace(`/${request_dto.source_language}/`, `/${translation.language_code}/`);
                 if (!files_to_content_map.hasOwnProperty(file_name)) {
