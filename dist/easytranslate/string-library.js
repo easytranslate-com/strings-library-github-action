@@ -101,7 +101,10 @@ class StringLibrary {
                 type: 'library-download',
                 attributes: {
                     languages: request_dto.all_languages,
-                    unpack_strings: request_dto.download_strings_format === 'nested'
+                    options: {
+                        exclude_empty_translations: true,
+                        unpack_strings: request_dto.download_strings_format === 'nested'
+                    }
                 }
             }, { responseType: "arraybuffer" });
             return response.data;
