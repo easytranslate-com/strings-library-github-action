@@ -46,7 +46,10 @@ async function pull(strings_api: StringLibrary, request_dto: RequestDto) {
       }
 
       let [file_name, key_name] = translation.key.split('::');
-      file_name = file_name.replace(`/${request_dto.source_language}/`, `/${translation.language_code}/`);
+      file_name = file_name
+        .replace(`/${request_dto.source_language}/`, `/${translation.language_code}/`)
+        .replace(`/${request_dto.source_language}.`, `/${translation.language_code}.`)
+        .replace(`${request_dto.source_language}.`, `${translation.language_code}.`);
       if (!files_to_content_map.hasOwnProperty(file_name)) {
         const path_details = helpers.path.parse(file_name);
         files_to_content_map[file_name] = {
