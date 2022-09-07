@@ -7,3 +7,5 @@ resources/
 .env.local
 .idea
 .secrets
+.github/
+locale/
