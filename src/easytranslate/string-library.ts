@@ -100,11 +100,14 @@ export class StringLibrary {
   }
 
   private static createKeyFromFile(file: string, source_language: string, language_code: string): string {
+    file = file
+      .replace(`/${language_code}/`, `/${source_language}/`)
+      .replace(`/${language_code}.`, `/${source_language}.`);
     if (file[0] === '/') {
       file = file.slice(1)
     }
 
-    return file.replace(`/${language_code}/`, `/${source_language}/`);
+    return file;
   }
 
   private async post(path: string, payload: any, options = {}): Promise<AxiosResponse> {
