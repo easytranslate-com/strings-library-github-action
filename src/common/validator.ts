@@ -1,5 +1,6 @@
 const core = require('@actions/core');
-core.setSecret('access_token');
+core.setSecret('client_id');
+core.setSecret('client_secret');
 
 export interface RequestDto {
   action: string
@@ -13,7 +14,8 @@ export interface RequestDto {
 }
 
 export interface ApiClientConstructor {
-  access_token: string
+  client_id: string
+  client_secret: string
   base_url: string
   team_name: string
   string_library_id: string
@@ -57,13 +59,15 @@ const validate_download_strings_format = (action: string): string => {
 }
 
 export const validateApiConstructor = (): ApiClientConstructor => {
-  const access_token = validate_not_empty(core.getInput('access_token'), 'access_token');
+  const client_id = validate_not_empty(core.getInput('client_id'), 'client_id');
+  const client_secret = validate_not_empty(core.getInput('client_secret'), 'client_secret');
   const base_url = validate_not_empty(core.getInput('base_api_url'), 'base_api_url');
   const team_name = validate_not_empty(core.getInput('team_name'), 'team_name');
   const string_library_id = validate_not_empty(core.getInput('string_library_id'), 'string_library_id');
 
   return {
-    access_token,
+    client_id: client_id,
+    client_secret: client_secret,
     base_url: base_url,
     team_name: team_name,
     string_library_id: string_library_id

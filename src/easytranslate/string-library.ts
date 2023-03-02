@@ -1,5 +1,6 @@
 import axios, {AxiosInstance, AxiosResponse} from 'axios';
 import {ApiClientConstructor, RequestDto} from "../common/validator";
+import {get_access_token} from './common/helpers';
 
 const GATEWAY_PREFIX = 'strings-library'
 
@@ -9,12 +10,13 @@ export class StringLibrary {
   private http: AxiosInstance;
 
   constructor(dto: ApiClientConstructor) {
+
     this.base_url = `${dto.base_url}/${GATEWAY_PREFIX}/api/v1/teams/${dto.team_name}`;
     this.library_id = dto.string_library_id;
     this.http = axios.create({
       baseURL: this.base_url,
       headers: {
-        authorization: `Bearer ${dto.access_token}`,
+        authorization: `Bearer ${get_access_token(dto.base_url, dto.client_id, dto.client_secret)}`,
         accept: 'application/json',
         'content-type': 'application/json'
       }

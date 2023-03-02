@@ -6,6 +6,21 @@ const isEqual = require('lodash.isequal');
 const encoding = 'utf8';
 const {Parse} = require('unzipper');
 
+export async function get_access_token(base_url: string, client_id: string, client_secret: string): Promise<string> {
+  let data = new FormData();
+  data.append('client_id', client_id);
+  data.append('client_secret', client_secret);
+  const response = await fetch(base_url.replace(/\/$/, "") + 'oauth/token', {method: 'POST', headers: {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}, body: formData})
+  if (!response.ok) {
+    console.log("Response was not ok", response.text);
+   
+  }
+  if (response.body !== null) {
+    return response.json()['access_token']
+  }
+  return "";
+}
+
 export function extract_zip_file(root_folder: string, content: Buffer): Promise<any> {
   const path = `${root_folder}/action.zip`;
   fs.writeFileSync(path, content);
