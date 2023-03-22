@@ -1,9 +1,9 @@
 import * as Buffer from "buffer";
 
 const supportedExtensions: object = {
-  yaml: 'yml',
-  yml: 'yml',
-  json: 'json'
+  '.yaml': 'yml',
+  '.yml': 'yml',
+  '.json': 'json'
 };
 
 const mkdirp = require('mkdirp');

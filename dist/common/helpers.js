@@ -11,9 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.yaml_to_object = exports.find_file_type = exports.create_files_from_strings = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
 const supportedExtensions = {
-    yaml: 'yml',
-    yml: 'yml',
-    json: 'json'
+    '.yaml': 'yml',
+    '.yml': 'yml',
+    '.json': 'json'
 };
 const mkdirp = require('mkdirp');
 const fs = require('fs');
