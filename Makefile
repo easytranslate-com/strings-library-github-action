@@ -21,4 +21,7 @@ act-raw:
 
 act:
 	@docker compose exec --user=node action npm run build
+	@docker stop act-push-yml-Download-strings-from-EasyTranslate | true
+	@docker rm act-push-yml-Download-strings-from-EasyTranslate | true
+	@docker volume rm act-push-yml-Download-strings-from-EasyTranslate  act-push-yml-Download-strings-from-EasyTranslate-env | true
 	@./bin/act

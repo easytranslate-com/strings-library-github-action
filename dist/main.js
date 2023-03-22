@@ -21,33 +21,42 @@ const glob = require('@actions/glob');
 const helpers = require('./common/helpers');
 const validation = require('./common/validator');
 function push(strings_api, request_dto) {
-    var e_1, _a;
+    var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         let files = [];
         const globberOptions = { followSymbolicLinks: request_dto.follow_symlinks };
         for (const pattern of request_dto.translation_paths) {
             const globber = yield glob.create(`${request_dto.source_root_folder}/${pattern}`, globberOptions);
             try {
-                for (var _b = (e_1 = void 0, __asyncValues(globber.globGenerator())), _c; _c = yield _b.next(), !_c.done;) {
-                    const file_path = _c.value;
-                    const language_code = helpers.find_language_code_from_file_path(file_path, request_dto.all_languages);
-                    const relative_path = file_path.split(request_dto.source_root_folder)[1];
-                    files.push({
-                        language_code: language_code,
-                        absolute_path: file_path,
-                        relative_path: relative_path,
-                        source_root_path: `/${request_dto.source_root_folder}${relative_path}`
-                    });
+                for (var _d = true, _e = (e_1 = void 0, __asyncValues(globber.globGenerator())), _f; _f = yield _e.next(), _a = _f.done, !_a;) {
+                    _c = _f.value;
+                    _d = false;
+                    try {
+                        const file_path = _c;
+                        const language_code = helpers.find_language_code_from_file_path(file_path, request_dto.all_languages);
+                        const relative_path = file_path.split(request_dto.source_root_folder)[1];
+                        files.push({
+                            language_code: language_code,
+                            absolute_path: file_path,
+                            relative_path: relative_path,
+                            source_root_path: `/${request_dto.source_root_folder}${relative_path}`
+                        });
+                    }
+                    finally {
+                        _d = true;
+                    }
                 }
             }
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
             finally {
                 try {
-                    if (_c && !_c.done && (_a = _b.return)) yield _a.call(_b);
+                    if (!_d && !_a && (_b = _e.return)) yield _b.call(_e);
                 }
                 finally { if (e_1) throw e_1.error; }
             }
         }
+        console.log('files');
+        return;
         if (files.length === 0) {
             throw Error('No files matched the given pattern');
         }
