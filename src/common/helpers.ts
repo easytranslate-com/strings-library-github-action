@@ -1,10 +1,18 @@
 import * as Buffer from "buffer";
 
+const supportedExtensions: object = {
+  yaml: 'yml',
+  yml: 'yml',
+  json: 'json'
+};
+
 const mkdirp = require('mkdirp');
 const fs = require('fs');
 const isEqual = require('lodash.isequal');
 const encoding = 'utf8';
 const {Parse} = require('unzipper');
+const pathLib = require('path');
+const yamlLib = require('js-yaml');
 
 export function extract_zip_file(root_folder: string, content: Buffer): Promise<any> {
   const path = `${root_folder}/action.zip`;
@@ -63,4 +71,20 @@ export async function create_files_from_strings(files_to_strings_map = {}): Prom
   }
 
   return modified_files;
+}
+
+export function find_file_type(file_path: string): object {
+  const extension = pathLib.extname(file_path).toLowerCase();
+  if (supportedExtensions[extension]) {
+    return {extension: supportedExtensions[extension], isSupported: true};
+  }
+
+  return {extension: extension, isSupported: false};
+}
+
+export async function yaml_to_object(file_path: string) {
+  const response = yamlLib.load(fs.readFileSync(file_path, 'utf8'));
+  console.log(response);
+
+  return response;
 }

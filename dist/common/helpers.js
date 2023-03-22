@@ -9,12 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.create_files_from_strings = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
+exports.yaml_to_object = exports.find_file_type = exports.create_files_from_strings = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
+const supportedExtensions = {
+    yaml: 'yml',
+    yml: 'yml',
+    json: 'json'
+};
 const mkdirp = require('mkdirp');
 const fs = require('fs');
 const isEqual = require('lodash.isequal');
 const encoding = 'utf8';
 const { Parse } = require('unzipper');
+const pathLib = require('path');
+const yamlLib = require('js-yaml');
 function extract_zip_file(root_folder, content) {
     const path = `${root_folder}/action.zip`;
     fs.writeFileSync(path, content);
@@ -69,3 +76,19 @@ function create_files_from_strings(files_to_strings_map = {}) {
     });
 }
 exports.create_files_from_strings = create_files_from_strings;
+function find_file_type(file_path) {
+    const extension = pathLib.extname(file_path).toLowerCase();
+    if (supportedExtensions[extension]) {
+        return { extension: supportedExtensions[extension], isSupported: true };
+    }
+    return { extension: extension, isSupported: false };
+}
+exports.find_file_type = find_file_type;
+function yaml_to_object(file_path) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yamlLib.load(fs.readFileSync(file_path, 'utf8'));
+        console.log(response);
+        return response;
+    });
+}
+exports.yaml_to_object = yaml_to_object;
