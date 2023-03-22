@@ -22,7 +22,7 @@ async function push(strings_api: StringLibrary, request_dto: RequestDto) {
       });
     }
   }
-  console.log('files');
+  console.log(files);
   return;
 
   if (files.length === 0) {
