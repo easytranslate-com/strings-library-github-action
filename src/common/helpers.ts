@@ -13,6 +13,7 @@ const encoding = 'utf8';
 const {Parse} = require('unzipper');
 const pathLib = require('path');
 const yamlLib = require('js-yaml');
+const flat = require('flat');
 
 export function extract_zip_file(root_folder: string, content: Buffer): Promise<any> {
   const path = `${root_folder}/action.zip`;
@@ -83,8 +84,8 @@ export function find_file_type(file_path: string): object {
 }
 
 export async function yaml_to_object(file_path: string) {
-  const response = yamlLib.load(fs.readFileSync(file_path, 'utf8'));
-  console.log(response);
+  const json = yamlLib.load(fs.readFileSync(file_path, 'utf8'));
 
-  return response;
+
+  return flat(json);
 }
