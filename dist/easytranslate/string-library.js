@@ -44,6 +44,7 @@ class StringLibrary {
         return __awaiter(this, void 0, void 0, function* () {
             const keys = {};
             for (const file of files) {
+                console.log(file);
                 const content = yield require(file.absolute_path);
                 const keyPrefix = StringLibrary.createKeyFromFile(file.relative_path, source_language, file.language_code);
                 for (const fileKey in content) {

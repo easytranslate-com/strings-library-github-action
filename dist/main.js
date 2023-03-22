@@ -55,8 +55,6 @@ function push(strings_api, request_dto) {
                 finally { if (e_1) throw e_1.error; }
             }
         }
-        console.log('files');
-        return;
         if (files.length === 0) {
             throw Error('No files matched the given pattern');
         }

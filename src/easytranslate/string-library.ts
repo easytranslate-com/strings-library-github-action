@@ -24,6 +24,7 @@ export class StringLibrary {
   async syncToLibrary(files: Array<any>, source_language: string, target_languages: Array<string>) {
     const keys = {};
     for (const file of files) {
+      console.log(file);
       const content = await require(file.absolute_path);
       const keyPrefix = StringLibrary.createKeyFromFile(file.relative_path, source_language, file.language_code);
       for (const fileKey in content) {

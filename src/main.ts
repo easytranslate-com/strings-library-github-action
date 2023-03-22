@@ -22,8 +22,6 @@ async function push(strings_api: StringLibrary, request_dto: RequestDto) {
       });
     }
   }
-  console.log(files);
-  return;
 
   if (files.length === 0) {
     throw Error('No files matched the given pattern');
