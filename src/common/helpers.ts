@@ -56,7 +56,7 @@ export async function create_files_from_strings(files_to_strings_map = {}): Prom
     if (fs.existsSync(object.absolute_path)) {
       const existing_content = fs.readFileSync(object.absolute_path, encoding);
       // const file_content = JSON.parse(existing_content);
-      const file_content = yamlLib.safeLoad(existing_content);
+      const file_content = yamlLib.load(existing_content);
       if (isEqual(file_content, object.strings)) {
         console.log(`File ${object.absolute_path} seems to be in sync`);
         continue;
