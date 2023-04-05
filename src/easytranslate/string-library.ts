@@ -24,6 +24,7 @@ export class StringLibrary {
   }
 
   async syncToLibrary(files: Array<any>, source_language: string, target_languages: Array<string>) {
+    console.log('Something is going on.');
     const keys = {};
     let content = {};
     for (const file of files) {
@@ -48,7 +49,7 @@ export class StringLibrary {
         };
       }
     }
-    
+
     console.log('Key that are sent to the string library are: ', keys);
 
     if (Object.keys(keys).length !== 0) {

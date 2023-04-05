@@ -43,6 +43,7 @@ class StringLibrary {
     }
     syncToLibrary(files, source_language, target_languages) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log('Something is going on.');
             const keys = {};
             let content = {};
             for (const file of files) {
