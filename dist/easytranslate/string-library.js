@@ -43,7 +43,6 @@ class StringLibrary {
     }
     syncToLibrary(files, source_language, target_languages) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('Something is going on.');
             const keys = {};
             let content = {};
             for (const file of files) {
@@ -69,7 +68,6 @@ class StringLibrary {
                     };
                 }
             }
-            console.log('Key that are sent to the string library are: ', keys);
             if (Object.keys(keys).length !== 0) {
                 yield this.post(`libraries/${this.library_id}/sync`, {
                     type: 'libraries',
