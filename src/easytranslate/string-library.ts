@@ -48,6 +48,8 @@ export class StringLibrary {
         };
       }
     }
+    
+    console.log('Key that are sent to the string library are: ', keys);
 
     if (Object.keys(keys).length !== 0) {
       await this.post(

@@ -68,6 +68,7 @@ class StringLibrary {
                     };
                 }
             }
+            console.log('Key that are sent to the string library are: ', keys);
             if (Object.keys(keys).length !== 0) {
                 yield this.post(`libraries/${this.library_id}/sync`, {
                     type: 'libraries',
