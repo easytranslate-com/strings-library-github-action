@@ -1,6 +1,8 @@
 import axios, {AxiosInstance, AxiosResponse} from 'axios';
 import {ApiClientConstructor, RequestDto} from "../common/validator";
 
+const helpers = require('./../common/helpers');
+
 const GATEWAY_PREFIX = 'strings-library'
 
 export class StringLibrary {
@@ -23,8 +25,13 @@ export class StringLibrary {
 
   async syncToLibrary(files: Array<any>, source_language: string, target_languages: Array<string>) {
     const keys = {};
+    let content = {};
     for (const file of files) {
-      const content = await require(file.absolute_path);
+      if (file.file_type.extension === 'json') {
+        content = await require(file.absolute_path);
+      } else {
+        content = await helpers.yaml_to_object(file.absolute_path);
+      }
       const keyPrefix = StringLibrary.createKeyFromFile(file.relative_path, source_language, file.language_code);
       for (const fileKey in content) {
         const key = `${keyPrefix}::${fileKey}`;

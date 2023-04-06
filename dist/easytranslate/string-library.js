@@ -26,6 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StringLibrary = void 0;
 const axios_1 = __importDefault(require("axios"));
+const helpers = require('./../common/helpers');
 const GATEWAY_PREFIX = 'strings-library';
 class StringLibrary {
     constructor(dto) {
@@ -43,8 +44,14 @@ class StringLibrary {
     syncToLibrary(files, source_language, target_languages) {
         return __awaiter(this, void 0, void 0, function* () {
             const keys = {};
+            let content = {};
             for (const file of files) {
-                const content = yield require(file.absolute_path);
+                if (file.file_type.extension === 'json') {
+                    content = yield require(file.absolute_path);
+                }
+                else {
+                    content = yield helpers.yaml_to_object(file.absolute_path);
+                }
                 const keyPrefix = StringLibrary.createKeyFromFile(file.relative_path, source_language, file.language_code);
                 for (const fileKey in content) {
                     const key = `${keyPrefix}::${fileKey}`;
