@@ -14,9 +14,14 @@ async function push(strings_api: StringLibrary, request_dto: RequestDto) {
     for await (const file_path of globber.globGenerator()) {
       const language_code = helpers.find_language_code_from_file_path(file_path, request_dto.all_languages)
       const relative_path = file_path.split(request_dto.source_root_folder)[1];
+      const file_type = helpers.find_file_type(file_path);
+      if (file_type.isSupported === false) {
+        throw Error(`Not supported file type: ${file_type.extension}`);
+      }
       files.push({
         language_code: language_code,
         absolute_path: file_path,
+        file_type: helpers.find_file_type(file_path),
         relative_path: relative_path,
         source_root_path: `/${request_dto.source_root_folder}${relative_path}`
       });
