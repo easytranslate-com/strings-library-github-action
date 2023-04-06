@@ -61,7 +61,7 @@ export async function create_files_from_strings(files_to_strings_map = {}): Prom
 
       let file_content = '';
 
-      if (extension === 'yml') {
+      if (extension === '.yml') {
         file_content = yamlLib.load(existing_content);
       } else {
         file_content = JSON.parse(existing_content);
@@ -72,7 +72,7 @@ export async function create_files_from_strings(files_to_strings_map = {}): Prom
         continue;
       }
 
-      if (extension === 'yml') {
+      if (extension === '.yml') {
         fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
       } else {
         fs.writeFileSync(object.absolute_path, JSON.stringify(object.strings, null, 4), encoding);
@@ -80,7 +80,7 @@ export async function create_files_from_strings(files_to_strings_map = {}): Prom
       console.log(`File ${object.absolute_path} updated successfully`);
       modified_files.push(object.absolute_path);
     } else {
-      if (extension === 'yml') {
+      if (extension === '.yml') {
         fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
       } else {
         fs.writeFileSync(object.absolute_path, JSON.stringify(object.strings, null, 4), encoding);

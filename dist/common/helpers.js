@@ -61,7 +61,7 @@ function create_files_from_strings(files_to_strings_map = {}) {
             if (fs.existsSync(object.absolute_path)) {
                 const existing_content = fs.readFileSync(object.absolute_path, encoding);
                 let file_content = '';
-                if (extension === 'yml') {
+                if (extension === '.yml') {
                     file_content = yamlLib.load(existing_content);
                 }
                 else {
@@ -71,7 +71,7 @@ function create_files_from_strings(files_to_strings_map = {}) {
                     console.log(`File ${object.absolute_path} seems to be in sync`);
                     continue;
                 }
-                if (extension === 'yml') {
+                if (extension === '.yml') {
                     fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
                 }
                 else {
@@ -81,7 +81,7 @@ function create_files_from_strings(files_to_strings_map = {}) {
                 modified_files.push(object.absolute_path);
             }
             else {
-                if (extension === 'yml') {
+                if (extension === '.yml') {
                     fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
                 }
                 else {
