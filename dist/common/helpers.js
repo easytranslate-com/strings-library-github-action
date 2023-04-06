@@ -56,12 +56,12 @@ function create_files_from_strings(files_to_strings_map = {}) {
         for (const key in files_to_strings_map) {
             const object = files_to_strings_map[key];
             yield mkdirp(object.folder_path);
-            const extension = pathLib.extname(object.absolute_path).toLowerCase();
-            console.log("Extension is: " + extension + ", Absolute path is: " + object.absolute_path);
+            const file_type = find_file_type(object.absolute_path);
+            console.log("Extension is: " + file_type.extension + ", Absolute path is: " + object.absolute_path);
             if (fs.existsSync(object.absolute_path)) {
                 const existing_content = fs.readFileSync(object.absolute_path, encoding);
                 let file_content = '';
-                if (extension === '.yml') {
+                if (file_type.extension === 'yml') {
                     file_content = yamlLib.load(existing_content);
                 }
                 else {
@@ -71,7 +71,7 @@ function create_files_from_strings(files_to_strings_map = {}) {
                     console.log(`File ${object.absolute_path} seems to be in sync`);
                     continue;
                 }
-                if (extension === '.yml') {
+                if (file_type.extension === 'yml') {
                     fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
                 }
                 else {
@@ -81,7 +81,7 @@ function create_files_from_strings(files_to_strings_map = {}) {
                 modified_files.push(object.absolute_path);
             }
             else {
-                if (extension === '.yml') {
+                if (file_type.extension === 'yml') {
                     fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
                 }
                 else {
