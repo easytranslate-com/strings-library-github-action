@@ -54,6 +54,7 @@ export async function create_files_from_strings(files_to_strings_map = {}): Prom
     await mkdirp(object.folder_path);
 
     const extension = pathLib.extname(object.absolute_path).toLowerCase();
+    console.log("Extension is: " + extension + ", Absolute path is: " + object.absolute_path);
 
     if (fs.existsSync(object.absolute_path)) {
       const existing_content = fs.readFileSync(object.absolute_path, encoding);
@@ -65,7 +66,7 @@ export async function create_files_from_strings(files_to_strings_map = {}): Prom
       } else {
         file_content = JSON.parse(existing_content);
       }
-      
+
       if (isEqual(file_content, object.strings)) {
         console.log(`File ${object.absolute_path} seems to be in sync`);
         continue;

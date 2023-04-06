@@ -57,6 +57,7 @@ function create_files_from_strings(files_to_strings_map = {}) {
             const object = files_to_strings_map[key];
             yield mkdirp(object.folder_path);
             const extension = pathLib.extname(object.absolute_path).toLowerCase();
+            console.log("Extension is: " + extension + ", Absolute path is: " + object.absolute_path);
             if (fs.existsSync(object.absolute_path)) {
                 const existing_content = fs.readFileSync(object.absolute_path, encoding);
                 let file_content = '';
