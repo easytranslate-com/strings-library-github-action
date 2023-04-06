@@ -56,22 +56,36 @@ function create_files_from_strings(files_to_strings_map = {}) {
         for (const key in files_to_strings_map) {
             const object = files_to_strings_map[key];
             yield mkdirp(object.folder_path);
+            const extension = pathLib.extname(object.absolute_path).toLowerCase();
             if (fs.existsSync(object.absolute_path)) {
                 const existing_content = fs.readFileSync(object.absolute_path, encoding);
-                // const file_content = JSON.parse(existing_content);
-                const file_content = yamlLib.load(existing_content);
+                let file_content = '';
+                if (extension === 'yml') {
+                    file_content = yamlLib.load(existing_content);
+                }
+                else {
+                    file_content = JSON.parse(existing_content);
+                }
                 if (isEqual(file_content, object.strings)) {
                     console.log(`File ${object.absolute_path} seems to be in sync`);
                     continue;
                 }
-                // fs.writeFileSync(object.absolute_path, JSON.stringify(object.strings, null, 4), encoding);
-                fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
+                if (extension === 'yml') {
+                    fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
+                }
+                else {
+                    fs.writeFileSync(object.absolute_path, JSON.stringify(object.strings, null, 4), encoding);
+                }
                 console.log(`File ${object.absolute_path} updated successfully`);
                 modified_files.push(object.absolute_path);
             }
             else {
-                // fs.writeFileSync(object.absolute_path, JSON.stringify(object.strings, null, 4), encoding);
-                fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
+                if (extension === 'yml') {
+                    fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
+                }
+                else {
+                    fs.writeFileSync(object.absolute_path, JSON.stringify(object.strings, null, 4), encoding);
+                }
                 console.log(`File ${object.absolute_path} created successfully`);
                 modified_files.push(object.absolute_path);
             }
