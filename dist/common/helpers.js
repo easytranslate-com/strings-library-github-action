@@ -115,8 +115,7 @@ function prepare_language_file_prefix(jsonStr, findKey, replaceString) {
         let jsonObj = JSON.parse(jsonStr);
         jsonObj[replaceString] = jsonObj[findKey];
         delete jsonObj[findKey];
-        let jsonStrNew = JSON.stringify(jsonObj);
-        console.log(jsonStrNew);
+        return JSON.stringify(jsonObj);
     });
 }
 exports.prepare_language_file_prefix = prepare_language_file_prefix;

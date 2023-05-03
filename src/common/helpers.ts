@@ -112,7 +112,6 @@ export async function prepare_language_file_prefix(jsonStr: string, findKey: str
   let jsonObj = JSON.parse(jsonStr);
   jsonObj[replaceString] = jsonObj[findKey];
   delete jsonObj[findKey];
-  let jsonStrNew = JSON.stringify(jsonObj);
-
-  console.log(jsonStrNew);
+  
+  return JSON.stringify(jsonObj);
 }
