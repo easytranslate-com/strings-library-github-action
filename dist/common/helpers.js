@@ -113,11 +113,20 @@ exports.yaml_to_object = yaml_to_object;
 function prepare_language_file_prefix(jsonStr, findKey, replaceString) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("JSON STR DEBUG: ", jsonStr);
-        let jsonObj = JSON.parse(jsonStr);
-        console.log("JSON STR DEBUG (AFTER): ", jsonObj);
-        jsonObj[replaceString] = jsonObj[findKey];
-        delete jsonObj[findKey];
-        return JSON.stringify(jsonObj);
+        let json = JSON.parse(jsonStr);
+        console.log("JSON STR DEBUG (AFTER): ", json);
+        const newJson = {};
+        for (const key in json) {
+            if (key.startsWith(findKey)) {
+                const newKey = key.replace(findKey + '.', replaceString + '.');
+                newJson[newKey] = json[key];
+            }
+            else {
+                newJson[key] = json[key];
+            }
+        }
+        console.log("NEW JSON: ", newJson);
+        return newJson;
     });
 }
 exports.prepare_language_file_prefix = prepare_language_file_prefix;

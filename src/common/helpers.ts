@@ -110,10 +110,21 @@ export async function yaml_to_object(file_path: string) {
 
 export async function prepare_language_file_prefix(jsonStr: string, findKey: string, replaceString: string) {
   console.log("JSON STR DEBUG: ", jsonStr);
-  let jsonObj = JSON.parse(jsonStr);
-  console.log("JSON STR DEBUG (AFTER): ", jsonObj);
-  jsonObj[replaceString] = jsonObj[findKey];
-  delete jsonObj[findKey];
+  let json = JSON.parse(jsonStr);
+  console.log("JSON STR DEBUG (AFTER): ", json);
 
-  return JSON.stringify(jsonObj);
+  const newJson = {};
+
+  for (const key in json) {
+    if (key.startsWith(findKey)) {
+      const newKey = key.replace(findKey + '.', replaceString + '.');
+      newJson[newKey] = json[key];
+    } else {
+      newJson[key] = json[key];
+    }
+  }
+
+  console.log("NEW JSON: ", newJson);
+
+  return newJson;
 }
