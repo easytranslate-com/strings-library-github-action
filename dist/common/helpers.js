@@ -110,13 +110,13 @@ function yaml_to_object(file_path) {
     });
 }
 exports.yaml_to_object = yaml_to_object;
-function prepare_language_file_prefix(jsonStr, findKey, replaceKey) {
+function prepare_language_file_prefix(json, findKey, replaceKey) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("JSON STR DEBUG: ", jsonStr);
+        // console.log("JSON STR DEBUG: ", jsonStr);
         console.log("JSON STR findKey: ", findKey);
         console.log("JSON STR replaceKey: ", replaceKey);
-        console.log('TYPE OF: ', typeof jsonStr);
-        const json = JSON.parse(jsonStr);
+        // console.log('TYPE OF: ', typeof jsonStr);
+        // const json = JSON.parse(jsonStr);
         console.log("JSON STR DEBUG (AFTER): ", json);
         const newJson = {};
         for (const key in json) {

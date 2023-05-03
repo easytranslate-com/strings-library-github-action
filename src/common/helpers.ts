@@ -108,12 +108,12 @@ export async function yaml_to_object(file_path: string) {
   return flat(json);
 }
 
-export async function prepare_language_file_prefix(jsonStr: string, findKey: string, replaceKey: string) {
-  console.log("JSON STR DEBUG: ", jsonStr);
+export async function prepare_language_file_prefix(json: string, findKey: string, replaceKey: string) {
+  // console.log("JSON STR DEBUG: ", jsonStr);
   console.log("JSON STR findKey: ", findKey);
   console.log("JSON STR replaceKey: ", replaceKey);
-  console.log('TYPE OF: ', typeof jsonStr);
-  const json = JSON.parse(jsonStr);
+  // console.log('TYPE OF: ', typeof jsonStr);
+  // const json = JSON.parse(jsonStr);
   console.log("JSON STR DEBUG (AFTER): ", json);
 
   const newJson = {};
