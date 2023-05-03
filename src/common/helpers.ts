@@ -112,6 +112,7 @@ export async function prepare_language_file_prefix(jsonStr: string, findKey: str
   console.log("JSON STR DEBUG: ", jsonStr);
   console.log("JSON STR findKey: ", findKey);
   console.log("JSON STR replaceKey: ", replaceKey);
+  console.log('TYPE OF: ', typeof jsonStr);
   const json = JSON.parse(jsonStr);
   console.log("JSON STR DEBUG (AFTER): ", json);
 
