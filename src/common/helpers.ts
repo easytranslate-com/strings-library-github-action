@@ -109,9 +109,10 @@ export async function yaml_to_object(file_path: string) {
 }
 
 export async function prepare_language_file_prefix(jsonStr: string, findKey: string, replaceString: string) {
+  console.log('DEBUG JSON STRIJNG: ', jsonStr);
   let jsonObj = JSON.parse(jsonStr);
   jsonObj[replaceString] = jsonObj[findKey];
   delete jsonObj[findKey];
-  
+
   return JSON.stringify(jsonObj);
 }
