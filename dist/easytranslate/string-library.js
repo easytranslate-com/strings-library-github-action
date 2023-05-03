@@ -59,7 +59,7 @@ class StringLibrary {
                         const langObject = file_lang_settings.files.find(obj => obj.hasOwnProperty(source_language));
                         if (langObject !== undefined) {
                             const langValue = langObject[source_language];
-                            content = helpers.prepare_language_file_prefix(content, source_language, langValue);
+                            content = yield helpers.prepare_language_file_prefix(content, source_language, langValue);
                             console.log("NEW CONTENT: ", content);
                         }
                     }

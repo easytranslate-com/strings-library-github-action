@@ -42,7 +42,7 @@ export class StringLibrary {
 
           if (langObject !== undefined) {
             const langValue = langObject[source_language];
-            content = helpers.prepare_language_file_prefix(content, source_language, langValue);
+            content = await helpers.prepare_language_file_prefix(content, source_language, langValue);
             console.log("NEW CONTENT: ", content);
           }
         }
