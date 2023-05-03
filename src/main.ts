@@ -32,7 +32,8 @@ async function push(strings_api: StringLibrary, request_dto: RequestDto) {
     throw Error('No files matched the given pattern');
   }
 
-  await strings_api.syncToLibrary(files, request_dto.source_language, request_dto.target_languages);
+  // await strings_api.syncToLibrary(files, request_dto.source_language, request_dto.target_languages);
+  await strings_api.syncToLibrary(files, request_dto);
   core.info("Strings are synced with EasyTranslate");
 }
 

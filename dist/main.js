@@ -63,7 +63,8 @@ function push(strings_api, request_dto) {
         if (files.length === 0) {
             throw Error('No files matched the given pattern');
         }
-        yield strings_api.syncToLibrary(files, request_dto.source_language, request_dto.target_languages);
+        // await strings_api.syncToLibrary(files, request_dto.source_language, request_dto.target_languages);
+        yield strings_api.syncToLibrary(files, request_dto);
         core.info("Strings are synced with EasyTranslate");
     });
 }
