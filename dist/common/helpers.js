@@ -112,8 +112,9 @@ function yaml_to_object(file_path) {
 exports.yaml_to_object = yaml_to_object;
 function prepare_language_file_prefix(jsonStr, findKey, replaceString) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('DEBUG JSON STRIJNG: ', jsonStr);
+        console.log("JSON STR DEBUG: ", jsonStr);
         let jsonObj = JSON.parse(jsonStr);
+        console.log("JSON STR DEBUG (AFTER): ", jsonObj);
         jsonObj[replaceString] = jsonObj[findKey];
         delete jsonObj[findKey];
         return JSON.stringify(jsonObj);
