@@ -36,6 +36,7 @@ export class StringLibrary {
         content = await require(file.absolute_path);
       } else {
         content = await helpers.yaml_to_object(file.absolute_path);
+        console.log('CUSTOM FILE: ', file_lang_settings);
         if (file_lang_settings.custom_mapping == true) {
           const langObject = file_lang_settings.files.find(obj => obj.hasOwnProperty(source_language));
 

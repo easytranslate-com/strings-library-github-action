@@ -54,6 +54,7 @@ class StringLibrary {
                 }
                 else {
                     content = yield helpers.yaml_to_object(file.absolute_path);
+                    console.log('CUSTOM FILE: ', file_lang_settings);
                     if (file_lang_settings.custom_mapping == true) {
                         const langObject = file_lang_settings.files.find(obj => obj.hasOwnProperty(source_language));
                         if (langObject !== undefined) {
