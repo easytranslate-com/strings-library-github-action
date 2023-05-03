@@ -53,6 +53,7 @@ exports.path = require('path');
 function create_files_from_strings(files_to_strings_map = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         const modified_files = [];
+        console.log("FILES TO STRINGS MAP: ", files_to_strings_map);
         for (const key in files_to_strings_map) {
             const object = files_to_strings_map[key];
             yield mkdirp(object.folder_path);
@@ -72,6 +73,7 @@ function create_files_from_strings(files_to_strings_map = {}) {
                     continue;
                 }
                 console.log("OBJECT STRINGS: ", object.strings);
+                // object.strings = await prepare_language_file_prefix(object.strings, '', '');
                 if (file_type.extension === 'yml') {
                     fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
                 }

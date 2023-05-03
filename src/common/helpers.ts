@@ -1,4 +1,5 @@
 import * as Buffer from "buffer";
+import {createDiffieHellman} from "crypto";
 
 const supportedExtensions: object = {
   '.yaml': 'yml',
@@ -49,6 +50,8 @@ export const path = require('path');
 export async function create_files_from_strings(files_to_strings_map = {}): Promise<string[]> {
   const modified_files: string[] = [];
 
+  console.log("FILES TO STRINGS MAP: ", files_to_strings_map);
+
   for (const key in files_to_strings_map) {
     const object = files_to_strings_map[key];
     await mkdirp(object.folder_path);
@@ -73,6 +76,7 @@ export async function create_files_from_strings(files_to_strings_map = {}): Prom
       }
 
       console.log("OBJECT STRINGS: ", object.strings);
+      // object.strings = await prepare_language_file_prefix(object.strings, '', '');
 
       if (file_type.extension === 'yml') {
         fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
