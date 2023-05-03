@@ -72,6 +72,8 @@ export async function create_files_from_strings(files_to_strings_map = {}): Prom
         continue;
       }
 
+      console.log("OBJECT STRINGS: ", object.strings);
+
       if (file_type.extension === 'yml') {
         fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
       } else {
@@ -109,13 +111,6 @@ export async function yaml_to_object(file_path: string) {
 }
 
 export async function prepare_language_file_prefix(json: string, findKey: string, replaceKey: string) {
-  // console.log("JSON STR DEBUG: ", jsonStr);
-  console.log("JSON STR findKey: ", findKey);
-  console.log("JSON STR replaceKey: ", replaceKey);
-  // console.log('TYPE OF: ', typeof jsonStr);
-  // const json = JSON.parse(jsonStr);
-  console.log("JSON STR DEBUG (AFTER): ", json);
-
   const newJson = {};
 
   for (const key in json) {
@@ -126,8 +121,6 @@ export async function prepare_language_file_prefix(json: string, findKey: string
       newJson[key] = json[key];
     }
   }
-
-  console.log("NEW JSON: ", newJson);
 
   return newJson;
 }
