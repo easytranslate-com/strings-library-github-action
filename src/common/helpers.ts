@@ -105,6 +105,14 @@ export function find_file_type(file_path: string): object {
 export async function yaml_to_object(file_path: string) {
   const json = yamlLib.load(fs.readFileSync(file_path, 'utf8'));
 
-
   return flat(json);
+}
+
+export async function prepare_language_file_prefix(jsonStr: string, findKey: string, replaceString: string) {
+  let jsonObj = JSON.parse(jsonStr);
+  jsonObj[replaceString] = jsonObj[findKey];
+  delete jsonObj[findKey];
+  let jsonStrNew = JSON.stringify(jsonObj);
+
+  console.log(jsonStrNew);
 }

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.yaml_to_object = exports.find_file_type = exports.create_files_from_strings = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
+exports.prepare_language_file_prefix = exports.yaml_to_object = exports.find_file_type = exports.create_files_from_strings = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
 const supportedExtensions = {
     '.yaml': 'yml',
     '.yml': 'yml',
@@ -110,3 +110,13 @@ function yaml_to_object(file_path) {
     });
 }
 exports.yaml_to_object = yaml_to_object;
+function prepare_language_file_prefix(jsonStr, findKey, replaceString) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let jsonObj = JSON.parse(jsonStr);
+        jsonObj[replaceString] = jsonObj[findKey];
+        delete jsonObj[findKey];
+        let jsonStrNew = JSON.stringify(jsonObj);
+        console.log(jsonStrNew);
+    });
+}
+exports.prepare_language_file_prefix = prepare_language_file_prefix;

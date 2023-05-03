@@ -23,14 +23,27 @@ export class StringLibrary {
     })
   }
 
-  async syncToLibrary(files: Array<any>, source_language: string, target_languages: Array<string>) {
+  async syncToLibrary(files: Array<any>, request_dto: RequestDto) {
     const keys = {};
     let content = {};
+
+    let source_language = request_dto.source_language;
+    let target_languages = request_dto.target_languages;
+    let file_lang_settings = request_dto.file_lang_settings;
+
     for (const file of files) {
       if (file.file_type.extension === 'json') {
         content = await require(file.absolute_path);
       } else {
         content = await helpers.yaml_to_object(file.absolute_path);
+        if (file_lang_settings.custom_mapping == true) {
+          const langObject = file_lang_settings.files.find(obj => obj.hasOwnProperty(source_language));
+
+          if (langObject !== undefined) {
+            const langValue = langObject[source_language];
+            content = helpers.prepare_language_file_prefix(content, source_language, langValue);
+          }
+        }
       }
       const keyPrefix = StringLibrary.createKeyFromFile(file.relative_path, source_language, file.language_code);
       for (const fileKey in content) {
