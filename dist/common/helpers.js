@@ -142,10 +142,10 @@ function prepare_pull_output(json, request_dto) {
         const extension = json[firstKey].file.split(".").pop();
         json[firstKey].file = folder_name + '.' + extension;
         const find_key = Object.keys(json[firstKey].strings)[0].split('.').shift();
-        console.log('JSON: ', json[firstKey]);
         console.log('FIND: ', find_key);
         console.log('FOLDER: ', folder_name);
         json[firstKey].strings = prepare_language_file_prefix(json[firstKey].strings, find_key, folder_name);
+        console.log('JSON AFTER: ', json[firstKey]);
         return json;
     });
 }
