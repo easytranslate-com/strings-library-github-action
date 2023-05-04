@@ -53,9 +53,7 @@ exports.path = require('path');
 function create_files_from_strings(files_to_strings_map = {}, request_dto) {
     return __awaiter(this, void 0, void 0, function* () {
         const modified_files = [];
-        console.log("FILES TO STRINGS MAP (BEFORE): ", files_to_strings_map);
         files_to_strings_map = yield prepare_pull_output(files_to_strings_map, request_dto);
-        console.log("FILES TO STRINGS MAP (AFTER): ", files_to_strings_map);
         for (const key in files_to_strings_map) {
             const object = files_to_strings_map[key];
             yield mkdirp(object.folder_path);
@@ -131,24 +129,17 @@ function prepare_language_file_prefix(json, findKey, replaceKey) {
 exports.prepare_language_file_prefix = prepare_language_file_prefix;
 function prepare_pull_output(json, request_dto) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('REQUEST DTO: ', request_dto);
         if (request_dto.file_lang_settings.custom_mapping !== true) {
             return json;
         }
-        console.log("JSON BEFORE: ", json);
         for (const key in json) {
-            console.log("FIRST KEY: ", key);
-            console.log("JSON FILE: ", json[key].file);
             const folder_name = json[key].folder_path.split("/").pop();
             const extension = json[key].file.split(".").pop();
             json[key].file = folder_name + '.' + extension;
             json[key].absolute_path = json[key].folder_path + '/' + json[key].file;
             const find_key = Object.keys(json[key].strings)[0].split('.').shift();
-            console.log('FIND: ', find_key);
-            console.log('FOLDER: ', folder_name);
             json[key].strings = yield prepare_language_file_prefix(json[key].strings, find_key, folder_name);
         }
-        console.log('JSON AFTER: ', json);
         return json;
     });
 }
