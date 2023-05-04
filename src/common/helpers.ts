@@ -129,7 +129,7 @@ export async function prepare_language_file_prefix(json: string, findKey: string
 
 export async function prepare_pull_output(json: string, request_dto: RequestDto) {
   console.log('REQUEST DTO: ', request_dto);
-  if (request_dto.custom_mapping !== true) {
+  if (request_dto.file_lang_settings.custom_mapping !== true) {
     return json;
   }
 

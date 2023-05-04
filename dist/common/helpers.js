@@ -131,7 +131,7 @@ exports.prepare_language_file_prefix = prepare_language_file_prefix;
 function prepare_pull_output(json, request_dto) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('REQUEST DTO: ', request_dto);
-        if (request_dto.custom_mapping !== true) {
+        if (request_dto.file_lang_settings.custom_mapping !== true) {
             return json;
         }
         const folder_name = json.folder_path.split("/").pop();
