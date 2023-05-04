@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.prepare_language_file_prefix = exports.yaml_to_object = exports.find_file_type = exports.create_files_from_strings = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
+exports.prepare_pull_output = exports.prepare_language_file_prefix = exports.yaml_to_object = exports.find_file_type = exports.create_files_from_strings = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
 const supportedExtensions = {
     '.yaml': 'yml',
     '.yml': 'yml',
@@ -50,10 +50,11 @@ function find_language_code_from_file_path(path, all_languages) {
 }
 exports.find_language_code_from_file_path = find_language_code_from_file_path;
 exports.path = require('path');
-function create_files_from_strings(files_to_strings_map = {}) {
+function create_files_from_strings(files_to_strings_map = {}, request_dto) {
     return __awaiter(this, void 0, void 0, function* () {
         const modified_files = [];
         console.log("FILES TO STRINGS MAP: ", files_to_strings_map);
+        files_to_strings_map = yield prepare_pull_output(files_to_strings_map, request_dto);
         for (const key in files_to_strings_map) {
             const object = files_to_strings_map[key];
             yield mkdirp(object.folder_path);
@@ -72,8 +73,6 @@ function create_files_from_strings(files_to_strings_map = {}) {
                     console.log(`File ${object.absolute_path} seems to be in sync`);
                     continue;
                 }
-                console.log("OBJECT STRINGS: ", object.strings);
-                // object.strings = await prepare_language_file_prefix(object.strings, '', '');
                 if (file_type.extension === 'yml') {
                     fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
                 }
@@ -129,3 +128,21 @@ function prepare_language_file_prefix(json, findKey, replaceKey) {
     });
 }
 exports.prepare_language_file_prefix = prepare_language_file_prefix;
+function prepare_pull_output(json, request_dto) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log('REQUEST DTO: ', request_dto);
+        if (request_dto.custom_mapping !== true) {
+            return json;
+        }
+        const folder_name = json.folder_path.split("/").pop();
+        const extension = json.file.split(".").pop();
+        json.file = folder_name + '.' + extension;
+        const find_key = json.strings[0].split('.').shift();
+        console.log('JSON: ', json);
+        console.log('FIND: ', find_key);
+        console.log('FOLDER: ', folder_name);
+        json.strings = prepare_language_file_prefix(json.strings, find_key, folder_name);
+        return json;
+    });
+}
+exports.prepare_pull_output = prepare_pull_output;

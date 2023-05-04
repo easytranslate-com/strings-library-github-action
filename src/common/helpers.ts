@@ -1,5 +1,5 @@
 import * as Buffer from "buffer";
-import {createDiffieHellman} from "crypto";
+import {RequestDto} from "./validator";
 
 const supportedExtensions: object = {
   '.yaml': 'yml',
@@ -47,10 +47,11 @@ export function find_language_code_from_file_path(path: string, all_languages: s
 
 export const path = require('path');
 
-export async function create_files_from_strings(files_to_strings_map = {}): Promise<string[]> {
+export async function create_files_from_strings(files_to_strings_map = {}, request_dto: RequestDto): Promise<string[]> {
   const modified_files: string[] = [];
 
   console.log("FILES TO STRINGS MAP: ", files_to_strings_map);
+  files_to_strings_map = await prepare_pull_output(files_to_strings_map, request_dto);
 
   for (const key in files_to_strings_map) {
     const object = files_to_strings_map[key];
@@ -74,9 +75,6 @@ export async function create_files_from_strings(files_to_strings_map = {}): Prom
         console.log(`File ${object.absolute_path} seems to be in sync`);
         continue;
       }
-
-      console.log("OBJECT STRINGS: ", object.strings);
-      // object.strings = await prepare_language_file_prefix(object.strings, '', '');
 
       if (file_type.extension === 'yml') {
         fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
@@ -127,4 +125,26 @@ export async function prepare_language_file_prefix(json: string, findKey: string
   }
 
   return newJson;
+}
+
+export async function prepare_pull_output(json: string, request_dto: RequestDto) {
+  console.log('REQUEST DTO: ', request_dto);
+  if (request_dto.custom_mapping !== true) {
+    return json;
+  }
+
+  const folder_name = json.folder_path.split("/").pop();
+  const extension = json.file.split(".").pop();
+
+  json.file = folder_name + '.' + extension;
+
+  const find_key = json.strings[0].split('.').shift();
+
+  console.log('JSON: ', json);
+  console.log('FIND: ', find_key);
+  console.log('FOLDER: ', folder_name);
+
+  json.strings = prepare_language_file_prefix(json.strings, find_key, folder_name);
+
+  return json;
 }

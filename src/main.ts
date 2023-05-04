@@ -70,7 +70,7 @@ async function pull(strings_api: StringLibrary, request_dto: RequestDto) {
     }
   }
 
-  const modified_files = await helpers.create_files_from_strings(files_to_content_map);
+  const modified_files = await helpers.create_files_from_strings(files_to_content_map, request_dto);
   if (modified_files.length === 0) {
     core.setOutput('outcome', 'skip');
     console.log('Executed without any changes');
