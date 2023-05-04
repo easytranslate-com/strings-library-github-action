@@ -142,6 +142,7 @@ function prepare_pull_output(json, request_dto) {
             const folder_name = json[key].folder_path.split("/").pop();
             const extension = json[key].file.split(".").pop();
             json[key].file = folder_name + '.' + extension;
+            json[key].absolute_path = json[key].folder_path + '/' + json[key].file;
             const find_key = Object.keys(json[key].strings)[0].split('.').shift();
             console.log('FIND: ', find_key);
             console.log('FOLDER: ', folder_name);
