@@ -134,16 +134,18 @@ function prepare_pull_output(json, request_dto) {
         if (request_dto.file_lang_settings.custom_mapping !== true) {
             return json;
         }
+        const firstKey = Object.keys(json)[0];
         console.log("JSON BEFORE: ", json);
-        console.log("JSON FILE: ", json.file);
-        const folder_name = json.folder_path.split("/").pop();
-        const extension = json.file.split(".").pop();
-        json.file = folder_name + '.' + extension;
-        const find_key = json.strings[0].split('.').shift();
-        console.log('JSON: ', json);
+        console.log("FIRST KEY: ", firstKey);
+        console.log("JSON FILE: ", json[firstKey].file);
+        const folder_name = json[firstKey].folder_path.split("/").pop();
+        const extension = json[firstKey].file.split(".").pop();
+        json[firstKey].file = folder_name + '.' + extension;
+        const find_key = json[firstKey].strings[0].split('.').shift();
+        console.log('JSON: ', json[firstKey]);
         console.log('FIND: ', find_key);
         console.log('FOLDER: ', folder_name);
-        json.strings = prepare_language_file_prefix(json.strings, find_key, folder_name);
+        json[firstKey].strings = prepare_language_file_prefix(json[firstKey].strings, find_key, folder_name);
         return json;
     });
 }
