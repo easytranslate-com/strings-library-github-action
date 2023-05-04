@@ -144,7 +144,7 @@ function prepare_pull_output(json, request_dto) {
         const find_key = Object.keys(json[firstKey].strings)[0].split('.').shift();
         console.log('FIND: ', find_key);
         console.log('FOLDER: ', folder_name);
-        json[firstKey].strings = prepare_language_file_prefix(json[firstKey].strings, find_key, folder_name);
+        json[firstKey].strings = yield prepare_language_file_prefix(json[firstKey].strings, find_key, folder_name);
         console.log('JSON AFTER: ', json[firstKey]);
         return json;
     });
