@@ -133,6 +133,9 @@ export async function prepare_pull_output(json: string, request_dto: RequestDto)
     return json;
   }
 
+  console.log("JSON BEFORE: ", json);
+  console.log("JSON FILE: ", json.file);
+
   const folder_name = json.folder_path.split("/").pop();
   const extension = json.file.split(".").pop();
 

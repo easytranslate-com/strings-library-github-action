@@ -134,6 +134,8 @@ function prepare_pull_output(json, request_dto) {
         if (request_dto.file_lang_settings.custom_mapping !== true) {
             return json;
         }
+        console.log("JSON BEFORE: ", json);
+        console.log("JSON FILE: ", json.file);
         const folder_name = json.folder_path.split("/").pop();
         const extension = json.file.split(".").pop();
         json.file = folder_name + '.' + extension;
