@@ -50,8 +50,9 @@ export const path = require('path');
 export async function create_files_from_strings(files_to_strings_map = {}, request_dto: RequestDto): Promise<string[]> {
   const modified_files: string[] = [];
 
-  console.log("FILES TO STRINGS MAP: ", files_to_strings_map);
+  console.log("FILES TO STRINGS MAP (BEFORE): ", files_to_strings_map);
   files_to_strings_map = await prepare_pull_output(files_to_strings_map, request_dto);
+  console.log("FILES TO STRINGS MAP (AFTER): ", files_to_strings_map);
 
   for (const key in files_to_strings_map) {
     const object = files_to_strings_map[key];
@@ -133,25 +134,26 @@ export async function prepare_pull_output(json: string, request_dto: RequestDto)
     return json;
   }
 
-  const firstKey = Object.keys(json)[0];
-
   console.log("JSON BEFORE: ", json);
-  console.log("FIRST KEY: ", firstKey);
-  console.log("JSON FILE: ", json[firstKey].file);
 
-  const folder_name = json[firstKey].folder_path.split("/").pop();
-  const extension = json[firstKey].file.split(".").pop();
+  for (const key in json) {
+    console.log("FIRST KEY: ", key);
+    console.log("JSON FILE: ", json[key].file);
 
-  json[firstKey].file = folder_name + '.' + extension;
+    const folder_name = json[key].folder_path.split("/").pop();
+    const extension = json[key].file.split(".").pop();
 
-  const find_key = Object.keys(json[firstKey].strings)[0].split('.').shift();
+    json[key].file = folder_name + '.' + extension;
 
-  console.log('FIND: ', find_key);
-  console.log('FOLDER: ', folder_name);
+    const find_key = Object.keys(json[key].strings)[0].split('.').shift();
 
-  json[firstKey].strings = await prepare_language_file_prefix(json[firstKey].strings, find_key, folder_name);
+    console.log('FIND: ', find_key);
+    console.log('FOLDER: ', folder_name);
 
-  console.log('JSON AFTER: ', json[firstKey]);
+    json[key].strings = await prepare_language_file_prefix(json[key].strings, find_key, folder_name);
+  }
+
+  console.log('JSON AFTER: ', json);
 
   return json;
 }
