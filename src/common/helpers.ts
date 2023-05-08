@@ -1,4 +1,5 @@
 import * as Buffer from "buffer";
+import {RequestDto} from "./validator";
 
 const supportedExtensions: object = {
   '.yaml': 'yml',
@@ -46,11 +47,14 @@ export function find_language_code_from_file_path(path: string, all_languages: s
 
 export const path = require('path');
 
-export async function create_files_from_strings(files_to_strings_map = {}): Promise<string[]> {
+export async function create_files_from_strings(files_to_strings_map = {}, request_dto: RequestDto): Promise<string[]> {
   const modified_files: string[] = [];
+
+  files_to_strings_map = await prepare_pull_output_for_files(files_to_strings_map, request_dto);
 
   for (const key in files_to_strings_map) {
     const object = files_to_strings_map[key];
+    
     await mkdirp(object.folder_path);
 
     const file_type = find_file_type(object.absolute_path);
@@ -105,6 +109,63 @@ export function find_file_type(file_path: string): object {
 export async function yaml_to_object(file_path: string) {
   const json = yamlLib.load(fs.readFileSync(file_path, 'utf8'));
 
-
   return flat(json);
+}
+
+export async function prepare_language_file_prefix(json: string, findKey: string, replaceKey: string) {
+  const newJson = {};
+
+  for (const key in json) {
+    if (key.startsWith(findKey)) {
+      const newKey = key.replace(findKey + '.', replaceKey + '.');
+      newJson[newKey] = json[key];
+    } else {
+      newJson[key] = json[key];
+    }
+  }
+
+  return newJson;
+}
+
+export async function prepare_pull_output_for_files(json: string, request_dto: RequestDto) {
+  if (request_dto.file_lang_settings.custom_mapping !== true) {
+    return json;
+  }
+
+  for (const key in json) {
+    const prefix_config = request_dto.file_lang_settings.files[json[key].language_code] || null;
+
+    if (prefix_config !== null) {
+      json[key].strings = await prepare_language_file_prefix(json[key].strings, prefix_config.root_content, prefix_config.language_code);
+    }
+
+    json[key].strings = unflattenData(json[key].strings);
+  }
+
+  return json;
+}
+
+function unflattenData(flatData: { [key: string]: any }): { [key: string]: any } {
+  const result: { [key: string]: any } = {};
+
+  for (const key in flatData) {
+    if (flatData.hasOwnProperty(key)) {
+      const value = flatData[key];
+      const keys = key.split('.');
+
+      let currentObject = result;
+      for (let i = 0; i < keys.length - 1; i++) {
+        const currentKey = keys[i];
+        if (!currentObject.hasOwnProperty(currentKey)) {
+          currentObject[currentKey] = {};
+        }
+        currentObject = currentObject[currentKey];
+      }
+
+      const lastKey = keys[keys.length - 1];
+      currentObject[lastKey] = value;
+    }
+  }
+
+  return result;
 }

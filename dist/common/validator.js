@@ -13,6 +13,9 @@ const validate_action = () => {
 const validate_source_root = () => {
     return validate_not_empty(core.getInput('source_root_folder'), 'source_root_folder');
 };
+const validate_file_lang_settings = () => {
+    return validate_not_empty(JSON.parse(core.getInput('file_lang_settings')), 'file_lang_settings');
+};
 const validate_source_language = () => {
     return validate_not_empty(core.getInput('source_language'), 'source_language');
 };
@@ -55,6 +58,7 @@ const validateRequest = () => {
     const source_language = validate_source_language();
     const target_languages = validate_target_languages();
     const action = validate_action();
+    const file_lang_settings = validate_file_lang_settings();
     return {
         action,
         source_root_folder: validate_source_root(),
@@ -63,7 +67,8 @@ const validateRequest = () => {
         translation_paths: validate_translation_paths(),
         all_languages: target_languages.concat(source_language),
         follow_symlinks: true,
-        download_strings_format: validate_download_strings_format(action)
+        download_strings_format: validate_download_strings_format(action),
+        file_lang_settings
     };
 };
 exports.validateRequest = validateRequest;

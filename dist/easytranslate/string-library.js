@@ -41,16 +41,26 @@ class StringLibrary {
             }
         });
     }
-    syncToLibrary(files, source_language, target_languages) {
+    syncToLibrary(files, request_dto) {
         return __awaiter(this, void 0, void 0, function* () {
             const keys = {};
             let content = {};
+            let source_language = request_dto.source_language;
+            let target_languages = request_dto.target_languages;
+            let file_lang_settings = request_dto.file_lang_settings;
             for (const file of files) {
                 if (file.file_type.extension === 'json') {
                     content = yield require(file.absolute_path);
                 }
                 else {
                     content = yield helpers.yaml_to_object(file.absolute_path);
+                    if (file_lang_settings.custom_mapping == true) {
+                        const langObject = file_lang_settings.files[file.language_code] || null;
+                        if (langObject !== null) {
+                            const langValue = langObject.language_code;
+                            content = yield helpers.prepare_language_file_prefix(content, langObject.root_content, langValue);
+                        }
+                    }
                 }
                 const keyPrefix = StringLibrary.createKeyFromFile(file.relative_path, source_language, file.language_code);
                 for (const fileKey in content) {
