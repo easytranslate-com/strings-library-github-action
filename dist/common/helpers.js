@@ -144,8 +144,10 @@ function prepare_pull_output_for_files(json, request_dto) {
             console.log("FIND KEY: ", find_key);
             console.log("REPLACE KEY: ", replace_key);
             console.log("REPLACE VALUE: ", replace_value);
-            json[key].strings = yield prepare_language_file_prefix(json[key].strings, find_key, replace_value);
-            json[key].strings = unflattenData(json[key].strings);
+            if (replace_key !== undefined) {
+                json[key].strings = yield prepare_language_file_prefix(json[key].strings, find_key, replace_value);
+                json[key].strings = unflattenData(json[key].strings);
+            }
         }
         return json;
     });
