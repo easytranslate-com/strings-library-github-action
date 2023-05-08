@@ -36,7 +36,6 @@ export function extract_zip_file(root_folder: string, content: Buffer): Promise<
 }
 
 export function find_language_code_from_file_path(path: string, all_languages: string[]): string {
-  console.log("ALL LANGUAGES: ", all_languages);
   for (const language of all_languages) {
     if (path.includes(`/${language}/`) || path.includes(`/${language}.`)) {
       return language;
@@ -51,17 +50,10 @@ export const path = require('path');
 export async function create_files_from_strings(files_to_strings_map = {}, request_dto: RequestDto): Promise<string[]> {
   const modified_files: string[] = [];
 
-  console.log('FILES TO STRINGS MAP: ', files_to_strings_map);
-  console.log('REQUEST DTO: ', request_dto);
-
   files_to_strings_map = await prepare_pull_output_for_files(files_to_strings_map, request_dto);
-
-  console.log('FILES TO STRINGS MAP (PREPARED): ', files_to_strings_map);
 
   for (const key in files_to_strings_map) {
     const object = files_to_strings_map[key];
-
-    console.log('OBJECT: ', object);
     
     await mkdirp(object.folder_path);
 
@@ -136,62 +128,18 @@ export async function prepare_language_file_prefix(json: string, findKey: string
 }
 
 export async function prepare_pull_output_for_files(json: string, request_dto: RequestDto) {
-  console.log('JSON: ', json);
   if (request_dto.file_lang_settings.custom_mapping !== true) {
     return json;
   }
 
-
-  // const langObject = file_lang_settings.files[file.language_code] || null;
-  //
-  // console.log('LANG OBJECT:', langObject);
-  //
-  // if (langObject !== null) {
-  //
-  //   const langValue = langObject.language_code;
-  //   console.log('TEST CONTENT:', langValue);
-  //   content = await helpers.prepare_language_file_prefix(content, langObject.root_content, langValue);
-  // }
-
   for (const key in json) {
-    const find_key = Object.keys(json[key].strings)[0].split('.').shift();
-    // const find_key = json[key].split('.').shift();
     const prefix_config = request_dto.file_lang_settings.files[json[key].language_code] || null;
-    // const replace_value = replace_key[find_key];
-    // const replace_value = json[key].file.split('.').shift();
-
-    // json[key].language_code
-
-    console.log("FIND KEY: ", find_key);
-    // console.log("REPLACE KEY: ", replace_key);
-    // console.log("REPLACE VALUE: ", replace_value);
 
     if (prefix_config !== null) {
-      // file_lang_settings: '{"custom_mapping": true, "files": {"en": {"root_content": "en", "language_code": "en"}, "nl_NL": {"root_content": "en", "language_code": "nl"}}}'
       json[key].strings = await prepare_language_file_prefix(json[key].strings, prefix_config.root_content, prefix_config.language_code);
     }
 
     json[key].strings = unflattenData(json[key].strings);
-  }
-
-  return json;
-}
-
-export async function prepare_pull_output(json: string, request_dto: RequestDto) {
-  if (request_dto.file_lang_settings.custom_mapping !== true) {
-    return json;
-  }
-
-  for (const key in json) {
-    const folder_name = json[key].folder_path.split("/").pop();
-    const extension = json[key].file.split(".").pop();
-
-    json[key].file = folder_name + '.' + extension;
-    json[key].absolute_path = json[key].folder_path + '/' + json[key].file;
-
-    const find_key = Object.keys(json[key].strings)[0].split('.').shift();
-
-    json[key].strings = await prepare_language_file_prefix(json[key].strings, find_key, folder_name);
   }
 
   return json;

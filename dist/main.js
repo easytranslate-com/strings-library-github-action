@@ -23,7 +23,6 @@ const validation = require('./common/validator');
 function push(strings_api, request_dto) {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('PUSH REQUEST DTO: ', request_dto);
         let files = [];
         const globberOptions = { followSymbolicLinks: request_dto.follow_symlinks };
         for (const pattern of request_dto.translation_paths) {
