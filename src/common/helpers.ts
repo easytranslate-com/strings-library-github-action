@@ -36,6 +36,7 @@ export function extract_zip_file(root_folder: string, content: Buffer): Promise<
 }
 
 export function find_language_code_from_file_path(path: string, all_languages: string[]): string {
+  console.log("ALL LANGUAGES: ", all_languages);
   for (const language of all_languages) {
     if (path.includes(`/${language}/`) || path.includes(`/${language}.`)) {
       return language;
@@ -51,7 +52,7 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
   const modified_files: string[] = [];
 
   console.log('FILES TO STRINGS MAP: ', files_to_strings_map);
-  console.log('REQUEST DTO: ', request_dto); 
+  console.log('REQUEST DTO: ', request_dto);
 
   files_to_strings_map = await prepare_pull_output(files_to_strings_map, request_dto);
 
