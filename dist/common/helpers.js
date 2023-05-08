@@ -53,6 +53,8 @@ exports.path = require('path');
 function create_files_from_strings(files_to_strings_map = {}, request_dto) {
     return __awaiter(this, void 0, void 0, function* () {
         const modified_files = [];
+        console.log('FILES TO STRINGS MAP: ', files_to_strings_map);
+        console.log('REQUEST DTO: ', request_dto);
         files_to_strings_map = yield prepare_pull_output(files_to_strings_map, request_dto);
         for (const key in files_to_strings_map) {
             const object = files_to_strings_map[key];

@@ -50,6 +50,9 @@ export const path = require('path');
 export async function create_files_from_strings(files_to_strings_map = {}, request_dto: RequestDto): Promise<string[]> {
   const modified_files: string[] = [];
 
+  console.log('FILES TO STRINGS MAP: ', files_to_strings_map);
+  console.log('REQUEST DTO: ', request_dto); 
+
   files_to_strings_map = await prepare_pull_output(files_to_strings_map, request_dto);
 
   for (const key in files_to_strings_map) {
