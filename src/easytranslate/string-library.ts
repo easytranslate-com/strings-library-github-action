@@ -46,6 +46,7 @@ export class StringLibrary {
         }
       }
       const keyPrefix = StringLibrary.createKeyFromFile(file.relative_path, source_language, file.language_code);
+      console.log('CONTENT PREFIX: ', content);
       for (const fileKey in content) {
         const key = `${keyPrefix}::${fileKey}`;
         const value = content[fileKey];
