@@ -138,7 +138,8 @@ function prepare_pull_output_for_files(json, request_dto) {
             return json;
         }
         for (const key in json) {
-            const find_key = Object.keys(json[key].strings)[0].split('.').shift();
+            // const find_key = Object.keys(json[key].strings)[0].split('.').shift();
+            const find_key = json[key].split('.').shift();
             const replace_key = request_dto.file_lang_settings.files.find(obj => find_key in obj);
             const replace_value = replace_key[find_key];
             console.log("FIND KEY: ", find_key);
@@ -146,8 +147,8 @@ function prepare_pull_output_for_files(json, request_dto) {
             console.log("REPLACE VALUE: ", replace_value);
             if (replace_key !== undefined) {
                 json[key].strings = yield prepare_language_file_prefix(json[key].strings, find_key, replace_value);
-                json[key].strings = unflattenData(json[key].strings);
             }
+            json[key].strings = unflattenData(json[key].strings);
         }
         return json;
     });
