@@ -39,12 +39,15 @@ export class StringLibrary {
       } else {
         content = await helpers.yaml_to_object(file.absolute_path);
         if (file_lang_settings.custom_mapping == true) {
-          const langObject = file_lang_settings.files.find(obj => obj.hasOwnProperty(file.language_code));
+          const langObject = file_lang_settings.files[file.language_code] || null;
 
-          if (langObject !== undefined) {
-            const langValue = langObject[file.language_code];
+          console.log('LANG OBJECT:', langObject);
+
+          if (langObject !== null) {
+
+            const langValue = langObject.language_code;
             console.log('TEST CONTENT:', langValue);
-            content = await helpers.prepare_language_file_prefix(content, file.language_code, langValue);
+            content = await helpers.prepare_language_file_prefix(content, langObject.root_content, langValue);
           }
         }
       }
