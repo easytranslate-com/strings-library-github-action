@@ -142,7 +142,7 @@ export async function prepare_pull_output_for_files(json: string, request_dto: R
 
   for (const key in json) {
     const find_key = Object.keys(json[key].strings)[0].split('.').shift();
-    const replace_key = request_dto.file_lang_settings.files.find(obj => key in obj);
+    const replace_key = request_dto.file_lang_settings.files.find(obj => find_key in obj);
 
     json[key].strings = await prepare_language_file_prefix(json[key].strings, find_key, replace_key);
     json[key].strings = unflattenData(json[key].strings);
