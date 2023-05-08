@@ -134,9 +134,20 @@ function prepare_language_file_prefix(json, findKey, replaceKey) {
 exports.prepare_language_file_prefix = prepare_language_file_prefix;
 function prepare_pull_output_for_files(json, request_dto) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log('JSON: ', json);
         if (request_dto.file_lang_settings.custom_mapping !== true) {
             return json;
         }
+        // const langObject = file_lang_settings.files[file.language_code] || null;
+        //
+        // console.log('LANG OBJECT:', langObject);
+        //
+        // if (langObject !== null) {
+        //
+        //   const langValue = langObject.language_code;
+        //   console.log('TEST CONTENT:', langValue);
+        //   content = await helpers.prepare_language_file_prefix(content, langObject.root_content, langValue);
+        // }
         for (const key in json) {
             const find_key = Object.keys(json[key].strings)[0].split('.').shift();
             // const find_key = json[key].split('.').shift();
