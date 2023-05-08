@@ -56,8 +56,13 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
 
   files_to_strings_map = await prepare_pull_output(files_to_strings_map, request_dto);
 
+  console.log('FILES TO STRINGS MAP (PREPARED): ', files_to_strings_map);
+
   for (const key in files_to_strings_map) {
     const object = files_to_strings_map[key];
+
+    console.log('OBJECT: ', object);
+    
     await mkdirp(object.folder_path);
 
     const file_type = find_file_type(object.absolute_path);
