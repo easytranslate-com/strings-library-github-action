@@ -48,6 +48,7 @@ class StringLibrary {
             let source_language = request_dto.source_language;
             let target_languages = request_dto.target_languages;
             let file_lang_settings = request_dto.file_lang_settings;
+            console.log('FILE: ', files);
             for (const file of files) {
                 if (file.file_type.extension === 'json') {
                     content = yield require(file.absolute_path);
