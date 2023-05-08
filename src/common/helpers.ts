@@ -54,7 +54,7 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
   console.log('FILES TO STRINGS MAP: ', files_to_strings_map);
   console.log('REQUEST DTO: ', request_dto);
 
-  files_to_strings_map = await prepare_pull_output(files_to_strings_map, request_dto);
+  files_to_strings_map = await prepare_pull_output_for_files(files_to_strings_map, request_dto);
 
   console.log('FILES TO STRINGS MAP (PREPARED): ', files_to_strings_map);
 
@@ -135,6 +135,22 @@ export async function prepare_language_file_prefix(json: string, findKey: string
   return newJson;
 }
 
+export async function prepare_pull_output_for_files(json: string, request_dto: RequestDto) {
+  if (request_dto.file_lang_settings.custom_mapping !== true) {
+    return json;
+  }
+
+  for (const key in json) {
+    const find_key = Object.keys(json[key].strings)[0].split('.').shift();
+    const replace_key = request_dto.file_lang_settings.files.find(obj => key in obj);
+
+    json[key].strings = await prepare_language_file_prefix(json[key].strings, find_key, replace_key);
+    json[key].strings = unflattenData(json[key].strings);
+  }
+
+  return json;
+}
+
 export async function prepare_pull_output(json: string, request_dto: RequestDto) {
   if (request_dto.file_lang_settings.custom_mapping !== true) {
     return json;
@@ -153,4 +169,29 @@ export async function prepare_pull_output(json: string, request_dto: RequestDto)
   }
 
   return json;
+}
+
+function unflattenData(flatData: { [key: string]: any }): { [key: string]: any } {
+  const result: { [key: string]: any } = {};
+
+  for (const key in flatData) {
+    if (flatData.hasOwnProperty(key)) {
+      const value = flatData[key];
+      const keys = key.split('.');
+
+      let currentObject = result;
+      for (let i = 0; i < keys.length - 1; i++) {
+        const currentKey = keys[i];
+        if (!currentObject.hasOwnProperty(currentKey)) {
+          currentObject[currentKey] = {};
+        }
+        currentObject = currentObject[currentKey];
+      }
+
+      const lastKey = keys[keys.length - 1];
+      currentObject[lastKey] = value;
+    }
+  }
+
+  return result;
 }
