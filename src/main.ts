@@ -7,6 +7,7 @@ const helpers = require('./common/helpers');
 const validation = require('./common/validator');
 
 async function push(strings_api: StringLibrary, request_dto: RequestDto) {
+  console.log('PUSH REQUEST DTO: ', request_dto);
   let files: object[] = [];
   const globberOptions = {followSymbolicLinks: request_dto.follow_symlinks};
   for (const pattern of request_dto.translation_paths) {
