@@ -141,10 +141,11 @@ export async function prepare_pull_output_for_files(json: string, request_dto: R
   }
 
   for (const key in json) {
-    // const find_key = Object.keys(json[key].strings)[0].split('.').shift();
-    const find_key = json[key].split('.').shift();
+    const find_key = Object.keys(json[key].strings)[0].split('.').shift();
+    // const find_key = json[key].split('.').shift();
     const replace_key = request_dto.file_lang_settings.files.find(obj => find_key in obj);
-    const replace_value = replace_key[find_key];
+    // const replace_value = replace_key[find_key];
+    const replace_value = json[key].file.split('.').shift();
 
     console.log("FIND KEY: ", find_key);
     console.log("REPLACE KEY: ", replace_key);
