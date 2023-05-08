@@ -59,6 +59,7 @@ class StringLibrary {
                         const langObject = file_lang_settings.files.find(obj => obj.hasOwnProperty(file.language_code));
                         if (langObject !== undefined) {
                             const langValue = langObject[file.language_code];
+                            console.log('TEST CONTENT:', langValue);
                             content = yield helpers.prepare_language_file_prefix(content, file.language_code, langValue);
                         }
                     }

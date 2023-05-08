@@ -43,6 +43,7 @@ export class StringLibrary {
 
           if (langObject !== undefined) {
             const langValue = langObject[file.language_code];
+            console.log('TEST CONTENT:', langValue);
             content = await helpers.prepare_language_file_prefix(content, file.language_code, langValue);
           }
         }
