@@ -63,6 +63,7 @@ async function pull(strings_api: StringLibrary, request_dto: RequestDto) {
           absolute_path: `${request_dto.source_root_folder}/${file_name}`,
           folder_path: `${request_dto.source_root_folder}/${path_details.dir}`,
           file: path_details.base,
+          language_code: translation.language_code,
           strings: {}
         };
       }

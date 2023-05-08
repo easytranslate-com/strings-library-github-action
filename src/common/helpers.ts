@@ -156,16 +156,19 @@ export async function prepare_pull_output_for_files(json: string, request_dto: R
   for (const key in json) {
     const find_key = Object.keys(json[key].strings)[0].split('.').shift();
     // const find_key = json[key].split('.').shift();
-    const replace_key = request_dto.file_lang_settings.files.find(obj => find_key in obj);
+    const prefix_config = request_dto.file_lang_settings.files[json[key].language_code] || null;
     // const replace_value = replace_key[find_key];
-    const replace_value = json[key].file.split('.').shift();
+    // const replace_value = json[key].file.split('.').shift();
+
+    // json[key].language_code
 
     console.log("FIND KEY: ", find_key);
-    console.log("REPLACE KEY: ", replace_key);
-    console.log("REPLACE VALUE: ", replace_value);
+    // console.log("REPLACE KEY: ", replace_key);
+    // console.log("REPLACE VALUE: ", replace_value);
 
-    if (replace_key !== undefined) {
-      json[key].strings = await prepare_language_file_prefix(json[key].strings, find_key, replace_value);
+    if (prefix_config !== null) {
+      // file_lang_settings: '{"custom_mapping": true, "files": {"en": {"root_content": "en", "language_code": "en"}, "nl_NL": {"root_content": "en", "language_code": "nl"}}}'
+      json[key].strings = await prepare_language_file_prefix(json[key].strings, prefix_config.root_content, prefix_config.language_code);
     }
 
     json[key].strings = unflattenData(json[key].strings);
