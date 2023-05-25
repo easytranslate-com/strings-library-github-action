@@ -60,7 +60,7 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
             const file_type = find_file_type(object.absolute_path);
             console.log("Extension is: " + file_type.extension + ", Absolute path is: " + object.absolute_path);
             console.log("FILE_CONTENT000", object.strings);
-            console.log("FILE_CONTENT000", yamlLib.dump(object.strings));
+            console.log("FILE_CONTENT000", yamlLib.safeDump(object.strings));
             if (fs.existsSync(object.absolute_path)) {
                 const existing_content = fs.readFileSync(object.absolute_path, encoding);
                 let file_content = '';
@@ -77,7 +77,7 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
                 }
                 if (file_type.extension === 'yml') {
                     console.log("FILE_CONTENT1", object.strings);
-                    fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
+                    fs.writeFileSync(object.absolute_path, yamlLib.safeDump(object.strings), encoding);
                 }
                 else {
                     fs.writeFileSync(object.absolute_path, JSON.stringify(object.strings, null, 4), encoding);
@@ -88,7 +88,7 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
             else {
                 console.log("FILE_CONTENT2", object.strings);
                 if (file_type.extension === 'yml') {
-                    fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
+                    fs.writeFileSync(object.absolute_path, yamlLib.safeDump(object.strings), encoding);
                 }
                 else {
                     fs.writeFileSync(object.absolute_path, JSON.stringify(object.strings, null, 4), encoding);
