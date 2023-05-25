@@ -60,6 +60,8 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
     const file_type = find_file_type(object.absolute_path);
     console.log("Extension is: " + file_type.extension + ", Absolute path is: " + object.absolute_path);
 
+    console.log("FILE_CONTENT000", object.strings);
+
     if (fs.existsSync(object.absolute_path)) {
       const existing_content = fs.readFileSync(object.absolute_path, encoding);
 
