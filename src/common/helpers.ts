@@ -63,6 +63,7 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
     console.log("FILE_CONTENT000", object.strings);
     console.log("FILE_CONTENT001", yamlLib.safeDump(object.strings));
     console.log("FILE_CONTENT001", files_to_strings_map);
+    return;
 
 
     if (fs.existsSync(object.absolute_path)) {
