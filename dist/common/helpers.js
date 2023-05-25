@@ -59,6 +59,7 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
             yield mkdirp(object.folder_path);
             const file_type = find_file_type(object.absolute_path);
             console.log("Extension is: " + file_type.extension + ", Absolute path is: " + object.absolute_path);
+            console.log("FILE_CONTENT000", object.strings);
             if (fs.existsSync(object.absolute_path)) {
                 const existing_content = fs.readFileSync(object.absolute_path, encoding);
                 let file_content = '';
@@ -68,11 +69,13 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
                 else {
                     file_content = JSON.parse(existing_content);
                 }
+                console.log("FILE_CONTENT0", object.strings);
                 if (isEqual(file_content, object.strings)) {
                     console.log(`File ${object.absolute_path} seems to be in sync`);
                     continue;
                 }
                 if (file_type.extension === 'yml') {
+                    console.log("FILE_CONTENT1", object.strings);
                     fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
                 }
                 else {
@@ -82,6 +85,7 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
                 modified_files.push(object.absolute_path);
             }
             else {
+                console.log("FILE_CONTENT2", object.strings);
                 if (file_type.extension === 'yml') {
                     fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
                 }
