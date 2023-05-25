@@ -71,6 +71,8 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
         file_content = JSON.parse(existing_content);
       }
 
+      console.log("FILE_CONTENT", file_content);
+
       if (isEqual(file_content, object.strings)) {
         console.log(`File ${object.absolute_path} seems to be in sync`);
         continue;
