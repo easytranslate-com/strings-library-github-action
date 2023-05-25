@@ -60,7 +60,8 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
             const file_type = find_file_type(object.absolute_path);
             console.log("Extension is: " + file_type.extension + ", Absolute path is: " + object.absolute_path);
             console.log("FILE_CONTENT000", object.strings);
-            console.log("FILE_CONTENT000", yamlLib.safeDump(object.strings));
+            console.log("FILE_CONTENT001", yamlLib.safeDump(object.strings));
+            console.log("FILE_CONTENT001", files_to_strings_map);
             if (fs.existsSync(object.absolute_path)) {
                 const existing_content = fs.readFileSync(object.absolute_path, encoding);
                 let file_content = '';
