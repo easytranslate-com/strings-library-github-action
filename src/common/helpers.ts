@@ -47,6 +47,16 @@ export function find_language_code_from_file_path(path: string, all_languages: s
 
 export const path = require('path');
 
+export async function convertKeysToArray(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(convertKeysToArray); // Recursively convert array elements
+  } else if (typeof obj === 'object' && obj !== null) {
+    return Object.values(obj).map(convertKeysToArray); // Recursively convert object values
+  }
+
+  return obj;
+}
+
 export async function create_files_from_strings(files_to_strings_map = {}, request_dto: RequestDto): Promise<string[]> {
   const modified_files: string[] = [];
 
@@ -60,7 +70,8 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
     const file_type = find_file_type(object.absolute_path);
     console.log("Extension is: " + file_type.extension + ", Absolute path is: " + object.absolute_path);
 
-    console.log('AAAAAA: ', yamlLib.dump('{"index":{"help_text":"Here are all documents you have been requested to approve","table_header":["File","Participant","Process","Status","Reason","Coach"],"title":"Approval requests"}}'));
+    console.log('BBB: ', convertKeysToArray(object.strings.en.approval_requests));
+    console.log('AAAAAA: ', yamlLib.dump(convertKeysToArray(object.strings.en.approval_requests)));
     console.log("FILE_CONTENT000", object.strings.en.approval_requests);
     console.log("FILE_CONTENT001", yamlLib.dump(object.strings));
     console.log("FILE_CONTENT001", files_to_strings_map);

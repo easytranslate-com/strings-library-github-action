@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.prepare_pull_output_for_files = exports.prepare_language_file_prefix = exports.yaml_to_object = exports.find_file_type = exports.create_files_from_strings = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
+exports.prepare_pull_output_for_files = exports.prepare_language_file_prefix = exports.yaml_to_object = exports.find_file_type = exports.create_files_from_strings = exports.convertKeysToArray = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
 const supportedExtensions = {
     '.yaml': 'yml',
     '.yml': 'yml',
@@ -50,6 +50,18 @@ function find_language_code_from_file_path(path, all_languages) {
 }
 exports.find_language_code_from_file_path = find_language_code_from_file_path;
 exports.path = require('path');
+function convertKeysToArray(obj) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (Array.isArray(obj)) {
+            return obj.map(convertKeysToArray); // Recursively convert array elements
+        }
+        else if (typeof obj === 'object' && obj !== null) {
+            return Object.values(obj).map(convertKeysToArray); // Recursively convert object values
+        }
+        return obj;
+    });
+}
+exports.convertKeysToArray = convertKeysToArray;
 function create_files_from_strings(files_to_strings_map = {}, request_dto) {
     return __awaiter(this, void 0, void 0, function* () {
         const modified_files = [];
@@ -59,7 +71,8 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
             yield mkdirp(object.folder_path);
             const file_type = find_file_type(object.absolute_path);
             console.log("Extension is: " + file_type.extension + ", Absolute path is: " + object.absolute_path);
-            console.log('AAAAAA: ', yamlLib.dump('{"index":{"help_text":"Here are all documents you have been requested to approve","table_header":["File","Participant","Process","Status","Reason","Coach"],"title":"Approval requests"}}'));
+            console.log('BBB: ', convertKeysToArray(object.strings.en.approval_requests));
+            console.log('AAAAAA: ', yamlLib.dump(convertKeysToArray(object.strings.en.approval_requests)));
             console.log("FILE_CONTENT000", object.strings.en.approval_requests);
             console.log("FILE_CONTENT001", yamlLib.dump(object.strings));
             console.log("FILE_CONTENT001", files_to_strings_map);
