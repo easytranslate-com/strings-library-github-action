@@ -47,6 +47,19 @@ export function find_language_code_from_file_path(path: string, all_languages: s
 
 export const path = require('path');
 
+export async function convertNumericKeysToArray(obj) {
+  for (let key in obj) {
+    if (!isNaN(key)) {
+      obj = Array.isArray(obj) ? obj : Object.values(obj);
+      return obj;
+    }
+    if (typeof obj[key] === 'object') {
+      obj[key] = convertNumericKeysToArray(obj[key]);
+    }
+  }
+  return obj;
+}
+
 export async function create_files_from_strings(files_to_strings_map = {}, request_dto: RequestDto): Promise<string[]> {
   const modified_files: string[] = [];
 
@@ -60,14 +73,9 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
     const file_type = find_file_type(object.absolute_path);
     console.log("Extension is: " + file_type.extension + ", Absolute path is: " + object.absolute_path);
 
-    let myArray = {
-      key: ['apple', 'banana', 'orange']
-    };
-    
-    console.log('AAAAAA: ', yamlLib.dump(myArray));
     console.log("FILE_CONTENT000", object.strings.en.approval_requests);
-    console.log("FILE_CONTENT001", yamlLib.dump(object.strings));
-    console.log("FILE_CONTENT001", files_to_strings_map);
+    console.log("FILE_CONTENT001", yamlLib.dump(convertNumericKeysToArray(object.strings)));
+    // console.log("FILE_CONTENT001", files_to_strings_map);
     return;
 
 

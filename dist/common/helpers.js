@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.prepare_pull_output_for_files = exports.prepare_language_file_prefix = exports.yaml_to_object = exports.find_file_type = exports.create_files_from_strings = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
+exports.prepare_pull_output_for_files = exports.prepare_language_file_prefix = exports.yaml_to_object = exports.find_file_type = exports.create_files_from_strings = exports.convertNumericKeysToArray = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
 const supportedExtensions = {
     '.yaml': 'yml',
     '.yml': 'yml',
@@ -50,6 +50,21 @@ function find_language_code_from_file_path(path, all_languages) {
 }
 exports.find_language_code_from_file_path = find_language_code_from_file_path;
 exports.path = require('path');
+function convertNumericKeysToArray(obj) {
+    return __awaiter(this, void 0, void 0, function* () {
+        for (let key in obj) {
+            if (!isNaN(key)) {
+                obj = Array.isArray(obj) ? obj : Object.values(obj);
+                return obj;
+            }
+            if (typeof obj[key] === 'object') {
+                obj[key] = convertNumericKeysToArray(obj[key]);
+            }
+        }
+        return obj;
+    });
+}
+exports.convertNumericKeysToArray = convertNumericKeysToArray;
 function create_files_from_strings(files_to_strings_map = {}, request_dto) {
     return __awaiter(this, void 0, void 0, function* () {
         const modified_files = [];
@@ -59,13 +74,9 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
             yield mkdirp(object.folder_path);
             const file_type = find_file_type(object.absolute_path);
             console.log("Extension is: " + file_type.extension + ", Absolute path is: " + object.absolute_path);
-            let myArray = {
-                key: ['apple', 'banana', 'orange']
-            };
-            console.log('AAAAAA: ', yamlLib.dump(myArray));
             console.log("FILE_CONTENT000", object.strings.en.approval_requests);
-            console.log("FILE_CONTENT001", yamlLib.dump(object.strings));
-            console.log("FILE_CONTENT001", files_to_strings_map);
+            console.log("FILE_CONTENT001", yamlLib.dump(convertNumericKeysToArray(object.strings)));
+            // console.log("FILE_CONTENT001", files_to_strings_map);
             return;
             if (fs.existsSync(object.absolute_path)) {
                 const existing_content = fs.readFileSync(object.absolute_path, encoding);
