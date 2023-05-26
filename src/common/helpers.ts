@@ -47,7 +47,7 @@ export function find_language_code_from_file_path(path: string, all_languages: s
 
 export const path = require('path');
 
-export async function convertNumericKeysToArray(obj) {
+export function convertNumericKeysToArray(obj) {
   for (let key in obj) {
     if (!isNaN(key)) {
       obj = Array.isArray(obj) ? obj : Object.values(obj);

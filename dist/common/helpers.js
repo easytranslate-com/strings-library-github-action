@@ -51,18 +51,16 @@ function find_language_code_from_file_path(path, all_languages) {
 exports.find_language_code_from_file_path = find_language_code_from_file_path;
 exports.path = require('path');
 function convertNumericKeysToArray(obj) {
-    return __awaiter(this, void 0, void 0, function* () {
-        for (let key in obj) {
-            if (!isNaN(key)) {
-                obj = Array.isArray(obj) ? obj : Object.values(obj);
-                return obj;
-            }
-            if (typeof obj[key] === 'object') {
-                obj[key] = convertNumericKeysToArray(obj[key]);
-            }
+    for (let key in obj) {
+        if (!isNaN(key)) {
+            obj = Array.isArray(obj) ? obj : Object.values(obj);
+            return obj;
         }
-        return obj;
-    });
+        if (typeof obj[key] === 'object') {
+            obj[key] = convertNumericKeysToArray(obj[key]);
+        }
+    }
+    return obj;
 }
 exports.convertNumericKeysToArray = convertNumericKeysToArray;
 function create_files_from_strings(files_to_strings_map = {}, request_dto) {
