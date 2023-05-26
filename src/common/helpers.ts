@@ -84,15 +84,12 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
         file_content = JSON.parse(existing_content);
       }
 
-      console.log("FILE_CONTENT0", object.strings);
-
       if (isEqual(file_content, object.strings)) {
         console.log(`File ${object.absolute_path} seems to be in sync`);
         continue;
       }
 
       if (file_type.extension === 'yml') {
-        console.log("FILE_CONTENT1", object.strings);
         object.strings = convertNumericKeysToArray(object.strings);
         fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
       } else {
@@ -101,7 +98,6 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
       console.log(`File ${object.absolute_path} updated successfully`);
       modified_files.push(object.absolute_path);
     } else {
-      console.log("FILE_CONTENT2", object.strings);
       if (file_type.extension === 'yml') {
         object.strings = convertNumericKeysToArray(object.strings);
         fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
