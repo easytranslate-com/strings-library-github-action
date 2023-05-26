@@ -47,6 +47,19 @@ export function find_language_code_from_file_path(path: string, all_languages: s
 
 export const path = require('path');
 
+export function convertNumericKeysToArray(obj) {
+  for (let key in obj) {
+    if (!isNaN(key)) {
+      obj = Array.isArray(obj) ? obj : Object.values(obj);
+      return obj;
+    }
+    if (typeof obj[key] === 'object') {
+      obj[key] = convertNumericKeysToArray(obj[key]);
+    }
+  }
+  return obj;
+}
+
 export async function create_files_from_strings(files_to_strings_map = {}, request_dto: RequestDto): Promise<string[]> {
   const modified_files: string[] = [];
 
@@ -77,6 +90,7 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
       }
 
       if (file_type.extension === 'yml') {
+        object.strings = convertNumericKeysToArray(object.strings);
         fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
       } else {
         fs.writeFileSync(object.absolute_path, JSON.stringify(object.strings, null, 4), encoding);
@@ -85,6 +99,7 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
       modified_files.push(object.absolute_path);
     } else {
       if (file_type.extension === 'yml') {
+        object.strings = convertNumericKeysToArray(object.strings);
         fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
       } else {
         fs.writeFileSync(object.absolute_path, JSON.stringify(object.strings, null, 4), encoding);
