@@ -72,11 +72,6 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
             yield mkdirp(object.folder_path);
             const file_type = find_file_type(object.absolute_path);
             console.log("Extension is: " + file_type.extension + ", Absolute path is: " + object.absolute_path);
-            object.strings = convertNumericKeysToArray(object.strings);
-            // console.log("FILE_CONTENT000", object.strings.en.approval_requests);
-            // console.log("FILE_CONTENT001", yamlLib.dump(convertNumericKeysToArray(object.strings)));
-            // console.log("FILE_CONTENT001", files_to_strings_map);
-            // return;
             if (fs.existsSync(object.absolute_path)) {
                 const existing_content = fs.readFileSync(object.absolute_path, encoding);
                 let file_content = '';
@@ -93,6 +88,7 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
                 }
                 if (file_type.extension === 'yml') {
                     console.log("FILE_CONTENT1", object.strings);
+                    object.strings = convertNumericKeysToArray(object.strings);
                     fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
                 }
                 else {
@@ -104,6 +100,7 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
             else {
                 console.log("FILE_CONTENT2", object.strings);
                 if (file_type.extension === 'yml') {
+                    object.strings = convertNumericKeysToArray(object.strings);
                     fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
                 }
                 else {
