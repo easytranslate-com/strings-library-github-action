@@ -73,10 +73,11 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
     const file_type = find_file_type(object.absolute_path);
     console.log("Extension is: " + file_type.extension + ", Absolute path is: " + object.absolute_path);
 
-    console.log("FILE_CONTENT000", object.strings.en.approval_requests);
-    console.log("FILE_CONTENT001", yamlLib.dump(convertNumericKeysToArray(object.strings)));
+    object.strings = convertNumericKeysToArray(object.strings);
+    // console.log("FILE_CONTENT000", object.strings.en.approval_requests);
+    // console.log("FILE_CONTENT001", yamlLib.dump(convertNumericKeysToArray(object.strings)));
     // console.log("FILE_CONTENT001", files_to_strings_map);
-    return;
+    // return;
 
 
     if (fs.existsSync(object.absolute_path)) {
@@ -99,7 +100,7 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
 
       if (file_type.extension === 'yml') {
         console.log("FILE_CONTENT1", object.strings);
-        fs.writeFileSync(object.absolute_path, yamlLib.safeDump(object.strings), encoding);
+        fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
       } else {
         fs.writeFileSync(object.absolute_path, JSON.stringify(object.strings, null, 4), encoding);
       }
@@ -108,7 +109,7 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
     } else {
       console.log("FILE_CONTENT2", object.strings);
       if (file_type.extension === 'yml') {
-        fs.writeFileSync(object.absolute_path, yamlLib.safeDump(object.strings), encoding);
+        fs.writeFileSync(object.absolute_path, yamlLib.dump(object.strings), encoding);
       } else {
         fs.writeFileSync(object.absolute_path, JSON.stringify(object.strings, null, 4), encoding);
       }
