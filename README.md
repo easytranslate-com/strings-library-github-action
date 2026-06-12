@@ -1,22 +1,60 @@
 # GitHub EasyTranslate Action
 
-GitHub Action that will help you synchronize your translation files from your source code into
-our string library.
+GitHub Action that synchronizes the translation files in your repository with an
+[EasyTranslate](https://easytranslate.com) String Library — push your source strings for
+translation and bring the translated files back, keeping your original file structure.
 
 ## Capabilities
 
-* Create your file structure into our string library (currently works for i18n format)
-* Pull all the content from our string library (source and target content), matching and keeping your file structure
-* Download from our string library, with i18n format
+* **Push** your source strings (JSON and YAML) into a String Library, mirroring your file structure
+* **Pull** translated content back, recreating one file per language with your original structure
+* **Download** the whole library as i18n files (one file per language, flat or nested keys)
+* Custom language mapping for YAML files that wrap their keys under a language-specific root
+
+## How it works
+
+Every string is stored in the library under a key that encodes the file it came from, e.g.
+`files/en/app.json::checkout.title`. That is what allows `pull` to recreate your files per
+language. A few conventions follow from this:
+
+* **The language of a file is detected from its path** — either a language folder
+  (`files/en/app.json`) or the file name itself (`locale/en.json`). Every matched file must
+  contain one of your configured language codes in its path.
+* **JSON files must use flat keys** (`{"checkout.title": "…"}`). Nested JSON objects are not
+  supported for `push`. YAML files can be nested — they are flattened automatically.
+* **`push` and `pull` work as a pair.** `pull` can only reconstruct files for strings that were
+  created via `push`. If you maintain your strings directly in the String Library, use
+  `download` instead.
+
+## Inputs
+
+| Input | Required | Description |
+|---|---|---|
+| `easytranslate_action` | yes | `push`, `pull` or `download` |
+| `source_language` | yes | Source language code, e.g. `en` |
+| `target_languages` | yes | Comma-separated target language codes, e.g. `da,de` |
+| `source_root_folder` | yes | Root folder of your strings; do not repeat it in `translation_file_paths` |
+| `translation_file_paths` | yes | Glob pattern(s) relative to the root folder, e.g. `files/**/**json` |
+| `access_token` | yes | Your EasyTranslate API token (store it as a repository secret) |
+| `base_api_url` | yes | `https://api.platform.easytranslate.com` (or your sandbox URL) |
+| `team_name` | yes | Your EasyTranslate team identifier |
+| `string_library_id` | yes | The String Library that stores your translations |
+| `download_strings_format` | `download` only | `flat` or `nested` JSON keys in the downloaded files |
+| `file_lang_settings` | no | JSON string enabling custom language mapping for YAML files (see below). Defaults to `{"custom_mapping": false}` |
+
+**Output:** `outcome` — `continue` when `pull`/`download` changed any files, `skip` when
+everything was already in sync. Use it to decide whether to commit the changes.
 
 ## Usage examples
 
-Please read the [documentation from GitHub](https://docs.github.com/en/actions/using-workflows) about their actions
-before diving into the examples.
+Please read the [GitHub Actions documentation](https://docs.github.com/en/actions/using-workflows)
+before diving into the examples. All examples are label-triggered: adding the label to an open
+pull request starts the workflow. The complete files live in the
+[`examples/`](examples/.github/workflows) folder.
 
-### Create your file structure on EasyTranslate
+### Push your strings to EasyTranslate
 
-Create your file under `.github/workflows/push-to-easytranslate.yml`
+Create `.github/workflows/push-to-easytranslate.yml`:
 
 ```yaml
 name: 'Push your strings to EasyTranslate'
@@ -26,19 +64,19 @@ on:
     types: [ labeled ]
 
 jobs:
-  download_strings:
+  push_strings_to_easytranslate:
     if: ${{ github.event.label.name == 'push-easytranslate-strings' }}
     runs-on: ubuntu-latest
     name: Send strings to EasyTranslate
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Execute our action
-        uses: "easytranslate-com/strings-library-github-action@v1"
+        uses: "easytranslate-com/strings-library-github-action@v2"
         id: push_easytranslate
         with:
           easytranslate_action: 'push'
@@ -47,18 +85,15 @@ jobs:
           translation_file_paths: 'files/**/**json'
           target_languages: 'da,de'
           access_token: ${{ secrets.EASYTRANSLATE_API_ACCESS_TOKEN }}
-          base_api_url: 'https://api.platform.sandbox.easytranslate.com'
-          team_name: 'x-force-deadpool'
-          string_library_id: 'easytranslate-string-library-id'
+          base_api_url: 'https://api.platform.easytranslate.com'
+          team_name: 'your-team-name'
+          string_library_id: 'your-string-library-id'
 ```
 
-Outcome: When already open PR is labeled with `push-easytranslate-strings` it will trigger the workflow, that will call
-our action
-to `push` the strings found within the pattern `resources/files/**/**json`, and using the given access token, it will
-create sync them with
-the given string library.
+Labeling an open PR with `push-easytranslate-strings` sends every string matching
+`resources/files/**/**json` to the given String Library.
 
-### Pull your translated content, while keeping your current structure
+### Pull your translated content back
 
 ```yaml
 name: 'Pull your strings from EasyTranslate'
@@ -71,10 +106,10 @@ jobs:
   pull_strings_from_easytranslate:
     if: ${{ github.event.label.name == 'pull-easytranslate-strings' }}
     runs-on: ubuntu-latest
-    name: Download strings from EasyTranslate
+    name: Pull strings from EasyTranslate
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           ref: ${{ github.event.pull_request.head.sha }}
@@ -85,7 +120,7 @@ jobs:
         run: gh pr checkout ${{ github.event.pull_request.number }}
 
       - name: Execute our action
-        uses: "easytranslate-com/strings-library-github-action@v1"
+        uses: "easytranslate-com/strings-library-github-action@v2"
         id: pull_easytranslate
         with:
           easytranslate_action: 'pull'
@@ -94,9 +129,9 @@ jobs:
           translation_file_paths: 'files/**/**json'
           target_languages: 'da,de'
           access_token: ${{ secrets.EASYTRANSLATE_API_ACCESS_TOKEN }}
-          base_api_url: 'https://api.platform.sandbox.easytranslate.com'
-          team_name: 'x-force-deadpool'
-          string_library_id: 'easytranslate-string-library-id'
+          base_api_url: 'https://api.platform.easytranslate.com'
+          team_name: 'your-team-name'
+          string_library_id: 'your-string-library-id'
 
       - name: Update the pull request
         if: ${{ steps.pull_easytranslate.outputs.outcome == 'continue' }}
@@ -110,80 +145,41 @@ jobs:
           git push
 ```
 
-Outcome: When already open PR is labeled with `pull-easytranslate-strings` it will trigger the workflow, that will call
-our action
-to `pull` all strings from the given library. **Please note this action works only if the strings are created using
-the `push` action**
+Labeling the PR with `pull-easytranslate-strings` fetches the translations and commits the
+translated files back to the PR — e.g. `resources/files/da/app.json` next to your
+`resources/files/en/app.json`. **This only works for strings created with the `push` action.**
 
-### Download the translated content in i18n format
+### Download the library in i18n format
+
+Same shape as `pull`, with two differences in the action step:
 
 ```yaml
-name: 'Download your strings from EasyTranslate'
-
-on:
-  pull_request:
-    types: [ labeled ]
-
-jobs:
-  pull_strings_from_easytranslate:
-    if: ${{ github.event.label.name == 'download-easytranslate-strings' }}
-    runs-on: ubuntu-latest
-    name: Download strings from EasyTranslate
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.ACCESS_TOKEN }}
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Checkout PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        run: gh pr checkout ${{ github.event.pull_request.number }}
-
-      - name: Execute our action
-        uses: "easytranslate-com/strings-library-github-action@v1.0.1"
-        id: pull_easytranslate
-        with:
           easytranslate_action: 'download'
-          source_language: 'en'
-          source_root_folder: 'resources'
-          translation_file_paths: 'files/**/**json'
-          target_languages: 'da,de'
-          access_token: ${{ secrets.EASYTRANSLATE_API_ACCESS_TOKEN }}
-          base_api_url: 'https://api.platform.sandbox.easytranslate.com'
-          team_name: 'x-force-deadpool'
-          string_library_id: 'easytranslate-string-library-id'
           download_strings_format: 'flat'
-
-      - name: Update the pull request
-        if: ${{ steps.pull_easytranslate.outputs.outcome == 'continue' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        run: |
-          git config user.name 'Your Name'
-          git config user.email 'Your GitHub email'
-          git add .
-          git commit -am 'Updating strings'
-          git push
 ```
 
-Outcome: When already open PR is labeled with `download-easytranslate-strings` it will trigger the workflow, that will
-call
-our action
-to `download` all strings from the given library. The files will be under the `resources` folder, and their file names
-will be based on the language code, so in this case there would be 3 files created `en.json`, `de.json` and `da.json`.
-Each file will contain the content.
+Labeling the PR with your download label fetches every language as one file under
+`source_root_folder` (`en.json`, `da.json`, `de.json`, …). With `flat`, keys stay as strings
+(`{"global.welcome": "Your value"}`); with `nested`, dot-separated keys become nested objects
+(`{"global": {"welcome": "Your value"}}`).
 
-The `download_strings_format` can be `flat` or `nested`.
+## Custom language mapping (YAML)
 
-If the value is `flat` the key names will be as string `{"global.welcome": "Your Value"}`.
-If the value is `nested` the key names will be as objects `"{global": {"welcome": "Your Value"}}`.
+Some YAML setups wrap all keys under a language-specific root key (for example Rails-style
+`nl_NL:` at the top of the file). The `file_lang_settings` input rewrites that prefix on `push`
+so all languages share the same keys, and restores it on `pull`:
 
-## More information?
+```yaml
+          file_lang_settings: '{"custom_mapping": true, "files": {"nl_NL": {"language_code": "nl", "root_content": "nl_NL"}}}'
+```
+
+If you do not use this, omit the input entirely.
+
+## Versioning
+
+Use `@v2` to follow the current stable line (no breaking changes within it), or pin a specific
+release tag (e.g. `@v2.0.4`) if you prefer fully reproducible workflows.
+
+## More information
 
 Visit [our website](https://easytranslate.com).
-
-
-
-    
