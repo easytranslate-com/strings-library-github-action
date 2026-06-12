@@ -37,7 +37,7 @@ export class StringLibrary {
       } else {
         content = await helpers.yaml_to_object(file.absolute_path);
         if (file_lang_settings.custom_mapping == true) {
-          const langObject = file_lang_settings.files[file.language_code] || null;
+          const langObject = file_lang_settings.files![file.language_code] || null;
 
           if (langObject !== null) {
 

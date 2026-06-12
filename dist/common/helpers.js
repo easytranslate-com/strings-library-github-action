@@ -9,7 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.prepare_pull_output_for_files = exports.prepare_language_file_prefix = exports.yaml_to_object = exports.find_file_type = exports.create_files_from_strings = exports.convertNumericKeysToArray = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
+exports.path = void 0;
+exports.extract_zip_file = extract_zip_file;
+exports.find_language_code_from_file_path = find_language_code_from_file_path;
+exports.convertNumericKeysToArray = convertNumericKeysToArray;
+exports.create_files_from_strings = create_files_from_strings;
+exports.find_file_type = find_file_type;
+exports.yaml_to_object = yaml_to_object;
+exports.prepare_language_file_prefix = prepare_language_file_prefix;
+exports.prepare_pull_output_for_files = prepare_pull_output_for_files;
 const supportedExtensions = {
     '.yaml': 'yml',
     '.yml': 'yml',
@@ -39,7 +47,6 @@ function extract_zip_file(root_folder, content) {
         stream.on('error', (error) => reject(error));
     });
 }
-exports.extract_zip_file = extract_zip_file;
 function find_language_code_from_file_path(path, all_languages) {
     for (const language of all_languages) {
         if (path.includes(`/${language}/`) || path.includes(`/${language}.`)) {
@@ -48,11 +55,10 @@ function find_language_code_from_file_path(path, all_languages) {
     }
     throw Error(`Unable to match ${path} with any of the languages: ${all_languages}`);
 }
-exports.find_language_code_from_file_path = find_language_code_from_file_path;
 exports.path = require('path');
 function convertNumericKeysToArray(obj) {
     for (let key in obj) {
-        if (!isNaN(key)) {
+        if (!isNaN(Number(key))) {
             obj = Array.isArray(obj) ? obj : Object.values(obj);
             return obj;
         }
@@ -62,9 +68,8 @@ function convertNumericKeysToArray(obj) {
     }
     return obj;
 }
-exports.convertNumericKeysToArray = convertNumericKeysToArray;
-function create_files_from_strings(files_to_strings_map = {}, request_dto) {
-    return __awaiter(this, void 0, void 0, function* () {
+function create_files_from_strings() {
+    return __awaiter(this, arguments, void 0, function* (files_to_strings_map = {}, request_dto) {
         const modified_files = [];
         files_to_strings_map = yield prepare_pull_output_for_files(files_to_strings_map, request_dto);
         for (const key in files_to_strings_map) {
@@ -110,7 +115,6 @@ function create_files_from_strings(files_to_strings_map = {}, request_dto) {
         return modified_files;
     });
 }
-exports.create_files_from_strings = create_files_from_strings;
 function find_file_type(file_path) {
     const extension = pathLib.extname(file_path).toLowerCase();
     if (supportedExtensions[extension]) {
@@ -118,14 +122,12 @@ function find_file_type(file_path) {
     }
     return { extension: extension, isSupported: false };
 }
-exports.find_file_type = find_file_type;
 function yaml_to_object(file_path) {
     return __awaiter(this, void 0, void 0, function* () {
         const json = yamlLib.load(fs.readFileSync(file_path, 'utf8'));
         return flat(json);
     });
 }
-exports.yaml_to_object = yaml_to_object;
 function prepare_language_file_prefix(json, findKey, replaceKey) {
     return __awaiter(this, void 0, void 0, function* () {
         const newJson = {};
@@ -141,7 +143,6 @@ function prepare_language_file_prefix(json, findKey, replaceKey) {
         return newJson;
     });
 }
-exports.prepare_language_file_prefix = prepare_language_file_prefix;
 function prepare_pull_output_for_files(json, request_dto) {
     return __awaiter(this, void 0, void 0, function* () {
         if (request_dto.file_lang_settings.custom_mapping !== true) {
@@ -157,7 +158,6 @@ function prepare_pull_output_for_files(json, request_dto) {
         return json;
     });
 }
-exports.prepare_pull_output_for_files = prepare_pull_output_for_files;
 function unflattenData(flatData) {
     const result = {};
     for (const key in flatData) {

@@ -49,7 +49,7 @@ export const path = require('path');
 
 export function convertNumericKeysToArray(obj) {
   for (let key in obj) {
-    if (!isNaN(key)) {
+    if (!isNaN(Number(key))) {
       obj = Array.isArray(obj) ? obj : Object.values(obj);
       return obj;
     }
@@ -112,7 +112,7 @@ export async function create_files_from_strings(files_to_strings_map = {}, reque
   return modified_files;
 }
 
-export function find_file_type(file_path: string): object {
+export function find_file_type(file_path: string): { extension: string, isSupported: boolean } {
   const extension = pathLib.extname(file_path).toLowerCase();
   if (supportedExtensions[extension]) {
     return {extension: supportedExtensions[extension], isSupported: true};
@@ -127,7 +127,7 @@ export async function yaml_to_object(file_path: string) {
   return flat(json);
 }
 
-export async function prepare_language_file_prefix(json: string, findKey: string, replaceKey: string) {
+export async function prepare_language_file_prefix(json: { [key: string]: any }, findKey: string, replaceKey: string) {
   const newJson = {};
 
   for (const key in json) {
@@ -142,13 +142,13 @@ export async function prepare_language_file_prefix(json: string, findKey: string
   return newJson;
 }
 
-export async function prepare_pull_output_for_files(json: string, request_dto: RequestDto) {
+export async function prepare_pull_output_for_files(json: { [key: string]: any }, request_dto: RequestDto) {
   if (request_dto.file_lang_settings.custom_mapping !== true) {
     return json;
   }
 
   for (const key in json) {
-    const prefix_config = request_dto.file_lang_settings.files[json[key].language_code] || null;
+    const prefix_config = request_dto.file_lang_settings.files![json[key].language_code] || null;
 
     if (prefix_config !== null) {
       json[key].strings = await prepare_language_file_prefix(json[key].strings, prefix_config.root_content, prefix_config.language_code);
