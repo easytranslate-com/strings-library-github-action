@@ -93,7 +93,7 @@ export async function create_files_from_strings(files_to_strings_map = {}): Prom
   return modified_files;
 }
 
-export function find_file_type(file_path: string): object {
+export function find_file_type(file_path: string): { extension: string, isSupported: boolean } {
   const extension = pathLib.extname(file_path).toLowerCase();
   if (supportedExtensions[extension]) {
     return {extension: supportedExtensions[extension], isSupported: true};

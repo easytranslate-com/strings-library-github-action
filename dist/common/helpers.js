@@ -9,7 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.yaml_to_object = exports.find_file_type = exports.create_files_from_strings = exports.path = exports.find_language_code_from_file_path = exports.extract_zip_file = void 0;
+exports.path = void 0;
+exports.extract_zip_file = extract_zip_file;
+exports.find_language_code_from_file_path = find_language_code_from_file_path;
+exports.create_files_from_strings = create_files_from_strings;
+exports.find_file_type = find_file_type;
+exports.yaml_to_object = yaml_to_object;
 const supportedExtensions = {
     '.yaml': 'yml',
     '.yml': 'yml',
@@ -39,7 +44,6 @@ function extract_zip_file(root_folder, content) {
         stream.on('error', (error) => reject(error));
     });
 }
-exports.extract_zip_file = extract_zip_file;
 function find_language_code_from_file_path(path, all_languages) {
     for (const language of all_languages) {
         if (path.includes(`/${language}/`) || path.includes(`/${language}.`)) {
@@ -48,10 +52,9 @@ function find_language_code_from_file_path(path, all_languages) {
     }
     throw Error(`Unable to match ${path} with any of the languages: ${all_languages}`);
 }
-exports.find_language_code_from_file_path = find_language_code_from_file_path;
 exports.path = require('path');
-function create_files_from_strings(files_to_strings_map = {}) {
-    return __awaiter(this, void 0, void 0, function* () {
+function create_files_from_strings() {
+    return __awaiter(this, arguments, void 0, function* (files_to_strings_map = {}) {
         const modified_files = [];
         for (const key in files_to_strings_map) {
             const object = files_to_strings_map[key];
@@ -94,7 +97,6 @@ function create_files_from_strings(files_to_strings_map = {}) {
         return modified_files;
     });
 }
-exports.create_files_from_strings = create_files_from_strings;
 function find_file_type(file_path) {
     const extension = pathLib.extname(file_path).toLowerCase();
     if (supportedExtensions[extension]) {
@@ -102,11 +104,9 @@ function find_file_type(file_path) {
     }
     return { extension: extension, isSupported: false };
 }
-exports.find_file_type = find_file_type;
 function yaml_to_object(file_path) {
     return __awaiter(this, void 0, void 0, function* () {
         const json = yamlLib.load(fs.readFileSync(file_path, 'utf8'));
         return flat(json);
     });
 }
-exports.yaml_to_object = yaml_to_object;

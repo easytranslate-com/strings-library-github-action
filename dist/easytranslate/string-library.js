@@ -12,8 +12,9 @@ var __await = (this && this.__await) || function (v) { return this instanceof __
 var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _arguments, generator) {
     if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
     var g = generator.apply(thisArg, _arguments || []), i, q = [];
-    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
-    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
+    return i = Object.create((typeof AsyncIterator === "function" ? AsyncIterator : Object).prototype), verb("next"), verb("throw"), verb("return", awaitReturn), i[Symbol.asyncIterator] = function () { return this; }, i;
+    function awaitReturn(f) { return function (v) { return Promise.resolve(v).then(f, reject); }; }
+    function verb(n, f) { if (g[n]) { i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; if (f) i[n] = f(i[n]); } }
     function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
     function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
     function fulfill(value) { resume("next", value); }
@@ -92,8 +93,8 @@ class StringLibrary {
             }
         });
     }
-    getTranslations(target_languages, page = 1, per_page = 50) {
-        return __awaiter(this, void 0, void 0, function* () {
+    getTranslations(target_languages_1) {
+        return __awaiter(this, arguments, void 0, function* (target_languages, page = 1, per_page = 50) {
             let query = `page=${page}&perPage=${per_page}`;
             for (const index in target_languages) {
                 query += `&filters[target_languages][${index}]=${target_languages[index]}`;
@@ -126,8 +127,8 @@ class StringLibrary {
         }
         return file;
     }
-    post(path, payload, options = {}) {
-        return __awaiter(this, void 0, void 0, function* () {
+    post(path_1, payload_1) {
+        return __awaiter(this, arguments, void 0, function* (path, payload, options = {}) {
             try {
                 return yield this.http.post(`${path}`, { data: payload }, options);
             }
