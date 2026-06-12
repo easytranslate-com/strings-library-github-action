@@ -32,7 +32,8 @@ async function push(strings_api: StringLibrary, request_dto: RequestDto) {
     throw Error('No files matched the given pattern');
   }
 
-  await strings_api.syncToLibrary(files, request_dto.source_language, request_dto.target_languages);
+  // await strings_api.syncToLibrary(files, request_dto.source_language, request_dto.target_languages);
+  await strings_api.syncToLibrary(files, request_dto);
   core.info("Strings are synced with EasyTranslate");
 }
 
@@ -61,6 +62,7 @@ async function pull(strings_api: StringLibrary, request_dto: RequestDto) {
           absolute_path: `${request_dto.source_root_folder}/${file_name}`,
           folder_path: `${request_dto.source_root_folder}/${path_details.dir}`,
           file: path_details.base,
+          language_code: translation.language_code,
           strings: {}
         };
       }
@@ -69,7 +71,7 @@ async function pull(strings_api: StringLibrary, request_dto: RequestDto) {
     }
   }
 
-  const modified_files = await helpers.create_files_from_strings(files_to_content_map);
+  const modified_files = await helpers.create_files_from_strings(files_to_content_map, request_dto);
   if (modified_files.length === 0) {
     core.setOutput('outcome', 'skip');
     console.log('Executed without any changes');

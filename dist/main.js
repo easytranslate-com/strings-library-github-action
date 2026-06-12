@@ -21,35 +21,30 @@ const glob = require('@actions/glob');
 const helpers = require('./common/helpers');
 const validation = require('./common/validator');
 function push(strings_api, request_dto) {
-    var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
+        var _a, e_1, _b, _c;
         let files = [];
         const globberOptions = { followSymbolicLinks: request_dto.follow_symlinks };
         for (const pattern of request_dto.translation_paths) {
             const globber = yield glob.create(`${request_dto.source_root_folder}/${pattern}`, globberOptions);
             try {
-                for (var _d = true, _e = (e_1 = void 0, __asyncValues(globber.globGenerator())), _f; _f = yield _e.next(), _a = _f.done, !_a;) {
+                for (var _d = true, _e = (e_1 = void 0, __asyncValues(globber.globGenerator())), _f; _f = yield _e.next(), _a = _f.done, !_a; _d = true) {
                     _c = _f.value;
                     _d = false;
-                    try {
-                        const file_path = _c;
-                        const language_code = helpers.find_language_code_from_file_path(file_path, request_dto.all_languages);
-                        const relative_path = file_path.split(request_dto.source_root_folder)[1];
-                        const file_type = helpers.find_file_type(file_path);
-                        if (file_type.isSupported === false) {
-                            throw Error(`Not supported file type: ${file_type.extension}`);
-                        }
-                        files.push({
-                            language_code: language_code,
-                            absolute_path: file_path,
-                            file_type: helpers.find_file_type(file_path),
-                            relative_path: relative_path,
-                            source_root_path: `/${request_dto.source_root_folder}${relative_path}`
-                        });
+                    const file_path = _c;
+                    const language_code = helpers.find_language_code_from_file_path(file_path, request_dto.all_languages);
+                    const relative_path = file_path.split(request_dto.source_root_folder)[1];
+                    const file_type = helpers.find_file_type(file_path);
+                    if (file_type.isSupported === false) {
+                        throw Error(`Not supported file type: ${file_type.extension}`);
                     }
-                    finally {
-                        _d = true;
-                    }
+                    files.push({
+                        language_code: language_code,
+                        absolute_path: file_path,
+                        file_type: helpers.find_file_type(file_path),
+                        relative_path: relative_path,
+                        source_root_path: `/${request_dto.source_root_folder}${relative_path}`
+                    });
                 }
             }
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -63,7 +58,8 @@ function push(strings_api, request_dto) {
         if (files.length === 0) {
             throw Error('No files matched the given pattern');
         }
-        yield strings_api.syncToLibrary(files, request_dto.source_language, request_dto.target_languages);
+        // await strings_api.syncToLibrary(files, request_dto.source_language, request_dto.target_languages);
+        yield strings_api.syncToLibrary(files, request_dto);
         core.info("Strings are synced with EasyTranslate");
     });
 }
@@ -92,13 +88,14 @@ function pull(strings_api, request_dto) {
                         absolute_path: `${request_dto.source_root_folder}/${file_name}`,
                         folder_path: `${request_dto.source_root_folder}/${path_details.dir}`,
                         file: path_details.base,
+                        language_code: translation.language_code,
                         strings: {}
                     };
                 }
                 files_to_content_map[file_name].strings[key_name] = translation.text;
             }
         }
-        const modified_files = yield helpers.create_files_from_strings(files_to_content_map);
+        const modified_files = yield helpers.create_files_from_strings(files_to_content_map, request_dto);
         if (modified_files.length === 0) {
             core.setOutput('outcome', 'skip');
             console.log('Executed without any changes');
