@@ -47,6 +47,10 @@ inputs:
     description: 'Defines the format of the JSON object inside the downloaded strings. Works only with `easytranslate_action: download`'
     required: false
 
+  file_lang_settings:
+    description: 'Defines the keys for source language'
+    required: false
+
 runs:
   using: 'docker'
   image: 'Dockerfile'

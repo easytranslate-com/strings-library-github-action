@@ -42,6 +42,7 @@ describe('find_language_code_from_file_path', () => {
 
 describe('create_files_from_strings (json pull flow)', () => {
   let tmp_dir: string;
+  const request_dto: any = {file_lang_settings: {custom_mapping: false}};
 
   beforeEach(() => {
     tmp_dir = fs.mkdtempSync(pathLib.join(os.tmpdir(), 'et-action-test-'));
@@ -64,7 +65,7 @@ describe('create_files_from_strings (json pull flow)', () => {
     const folder = pathLib.join(tmp_dir, 'da');
     const strings = {'app.title': 'Velkommen', 'app.cta': 'Køb nu'};
 
-    const modified = await helpers.create_files_from_strings(file_map(folder, 'app.json', strings));
+    const modified = await helpers.create_files_from_strings(file_map(folder, 'app.json', strings), request_dto);
 
     expect(modified).toEqual([`${folder}/app.json`]);
     const written = fs.readFileSync(`${folder}/app.json`, 'utf8');
@@ -78,7 +79,7 @@ describe('create_files_from_strings (json pull flow)', () => {
     fs.writeFileSync(`${folder}/app.json`, JSON.stringify({'app.title': 'Gammel tekst'}), 'utf8');
     const strings = {'app.title': 'Velkommen'};
 
-    const modified = await helpers.create_files_from_strings(file_map(folder, 'app.json', strings));
+    const modified = await helpers.create_files_from_strings(file_map(folder, 'app.json', strings), request_dto);
 
     expect(modified).toEqual([`${folder}/app.json`]);
     expect(JSON.parse(fs.readFileSync(`${folder}/app.json`, 'utf8'))).toEqual(strings);
@@ -90,7 +91,7 @@ describe('create_files_from_strings (json pull flow)', () => {
     fs.mkdirSync(folder, {recursive: true});
     fs.writeFileSync(`${folder}/app.json`, JSON.stringify(strings, null, 4), 'utf8');
 
-    const modified = await helpers.create_files_from_strings(file_map(folder, 'app.json', strings));
+    const modified = await helpers.create_files_from_strings(file_map(folder, 'app.json', strings), request_dto);
 
     expect(modified).toEqual([]);
   });

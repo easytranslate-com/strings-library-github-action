@@ -1,6 +1,11 @@
 const core = require('@actions/core');
 core.setSecret('access_token');
 
+export interface FileLangSettings {
+  custom_mapping: boolean
+  files?: { [language_code: string]: { language_code: string, root_content: string } }
+}
+
 export interface RequestDto {
   action: string
   source_root_folder: string
@@ -10,6 +15,7 @@ export interface RequestDto {
   all_languages: string[]
   follow_symlinks: boolean
   download_strings_format: string
+  file_lang_settings: FileLangSettings
 }
 
 export interface ApiClientConstructor {
@@ -30,6 +36,10 @@ const validate_action = (): string => {
 
 const validate_source_root = (): string => {
   return validate_not_empty(core.getInput('source_root_folder'), 'source_root_folder');
+}
+
+const validate_file_lang_settings = (): FileLangSettings => {
+  return validate_not_empty(JSON.parse(core.getInput('file_lang_settings')), 'file_lang_settings');
 }
 
 const validate_source_language = (): string => {
@@ -82,6 +92,7 @@ export const validateRequest = (): RequestDto => {
   const source_language = validate_source_language();
   const target_languages = validate_target_languages();
   const action = validate_action();
+  const file_lang_settings = validate_file_lang_settings()
 
   return {
     action,
@@ -91,6 +102,7 @@ export const validateRequest = (): RequestDto => {
     translation_paths: validate_translation_paths(),
     all_languages: target_languages.concat(source_language),
     follow_symlinks: true,
-    download_strings_format: validate_download_strings_format(action)
+    download_strings_format: validate_download_strings_format(action),
+    file_lang_settings
   }
 }

@@ -44,10 +44,16 @@ describe('StringLibrary', () => {
   });
 
   describe('syncToLibrary (json push flow)', () => {
+    const request_dto: any = {
+      source_language: 'en',
+      target_languages: ['da'],
+      file_lang_settings: {custom_mapping: false}
+    };
+
     it('builds keys from json files and groups translations under the source file path', async () => {
       const library = new StringLibrary(api_dto);
 
-      await library.syncToLibrary([json_file('en'), json_file('da')], 'en', ['da']);
+      await library.syncToLibrary([json_file('en'), json_file('da')], request_dto);
 
       expect(http.post).toHaveBeenCalledTimes(1);
       const [url, body] = http.post.mock.calls[0];
@@ -86,7 +92,7 @@ describe('StringLibrary', () => {
     it('does not call the api when there are no keys to sync', async () => {
       const library = new StringLibrary(api_dto);
 
-      await library.syncToLibrary([], 'en', ['da']);
+      await library.syncToLibrary([], request_dto);
 
       expect(http.post).not.toHaveBeenCalled();
     });
