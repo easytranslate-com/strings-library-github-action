@@ -48,8 +48,9 @@ inputs:
     required: false
 
   file_lang_settings:
-    description: 'Defines the keys for source language'
+    description: 'Defines the keys for source language. JSON string enabling custom language mapping for YAML files'
     required: false
+    default: '{"custom_mapping": false}'
 
 runs:
   using: 'docker'
