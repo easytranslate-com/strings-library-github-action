@@ -46,6 +46,6 @@
     "unzipper": "^0.10.11"
   },
   "overrides": {
-    "undici": "^6.26.0"
+    "undici": "^6.27.0"
   }
 }
