@@ -39,7 +39,7 @@
     "@actions/glob": "^0.3.0",
     "axios": "^1.6.0",
     "flat": "^5.0.2",
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.3.1",
     "lodash.isequal": "^4.5.0",
     "mkdirp": "^1.0.4",
     "path": "^0.12.7",
